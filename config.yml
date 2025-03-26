@@ -1,0 +1,34 @@
+# Common secrets shared across multiple projects or environments.
+common:
+  CODACY_API_TOKEN: op://kh-development/Codacy/token
+  DOCKER_REGISTRY_USERNAME: op://kh-development/Docker-github-workflow-actions/username
+  DOCKER_REGISTRY_TOKEN: op://kh-development/Docker-github-workflow-actions/password
+
+# Secrets specific to the pdfdebugger project.
+pdfdebugger:
+  # Add project-specific secrets here.
+  # Example:
+  # API_KEY: op://kh-development/pdfdebugger/api-key
+
+# Uncomment and add secrets for the following projects as needed:
+# blog
+# bodleian-end-to-end-testing
+# bodleian-frontend
+# bodleian-service
+# infrastructure-bodleian-398addce
+# dockers
+# flopbuster-interview
+# gcp-terraform-examples
+# gcp-tf-modules
+# gh-contribution-stats
+# github-aus-check0r
+# kh-gcp-bootstrap
+# kh-gcp-seed
+# koenighotze
+# koenighotze-aws-setup
+# koenighotze-gcp-base-setup
+# koenighotze-gcp-bodleian-setup
+# koenighotze-gcp-platform-setup
+# koenighotze-gcp-terraform-examples-setup
+# koenighotze.github.io
+
