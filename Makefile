@@ -67,5 +67,8 @@ qa: lint test
 freeze:
 	$(PIP) freeze > requirements.txt
 
+outdated:
+	$(PIP) list --outdated
+
 run:
 	$(RUN) python main.py config.yml
