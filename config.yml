@@ -10,6 +10,9 @@ pdfdebugger:
   # Example:
   # API_KEY: op://kh-development/pdfdebugger/api-key
 
+kh-gcp-seed:
+  GCP_RESOURCE_POSTFIX: op://kh-development/kh-gcp-bootstrap/gcp_resource_postfix
+
 # Uncomment and add secrets for the following projects as needed:
 # blog
 # bodleian-end-to-end-testing
@@ -23,7 +26,7 @@ pdfdebugger:
 # gh-contribution-stats
 # github-aus-check0r
 # kh-gcp-bootstrap
-# kh-gcp-seed
+
 # koenighotze
 # koenighotze-aws-setup
 # koenighotze-gcp-base-setup
