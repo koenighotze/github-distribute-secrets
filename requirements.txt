@@ -11,7 +11,7 @@ pydocstyle==6.3.0
 pytest==8.3.5
 pytest-cov==6.0.0
 pyyaml==6.0.2
-ruff==0.11.2
+ruff==0.11.9
 setuptools==78.1.0
 snowballstemmer==2.2.0
 tomli==2.2.1
