@@ -5,15 +5,15 @@ common:
   DOCKER_REGISTRY_TOKEN: op://kh-development/Docker-github-workflow-actions/password
 
 # Secrets specific to the pdfdebugger project.
-pdfdebugger:
+koenighotze/pdfdebugger:
   # Add project-specific secrets here.
   # Example:
   # API_KEY: op://kh-development/pdfdebugger/api-key
 
-kh-gcp-seed:
+koenighotze/kh-gcp-seed:
   GCP_RESOURCE_POSTFIX: op://kh-development/kh-gcp-bootstrap/gcp_resource_postfix
 
-go-playground:
+koenighotze/go-playground:
   GCP_RESOURCE_POSTFIX: op://kh-development/kh-gcp-bootstrap/gcp_resource_postfix
 
 # Uncomment and add secrets for the following projects as needed:

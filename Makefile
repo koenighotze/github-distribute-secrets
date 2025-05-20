@@ -21,7 +21,7 @@ test.report: get.dependencies
 	go test -json > TestResults.json
 
 build: vet get.dependencies
-	go build
+	go build -o cmd/
 
 run.local:
 	go run gh-distribute-secrets.go
