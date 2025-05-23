@@ -31,7 +31,9 @@ func applyConfigurationToRepository(configMap config.RepositoryConfiguration, re
 			continue
 		}
 
-		gh.AddSecretToRepository(key, secret, repositoy)
+		if err = gh.AddSecretToRepository(key, secret, repositoy); err != nil {
+			log.Default().Printf("Error adding secret with key %s to repository %s: %v", key, repositoy, err)
+		}
 	}
 
 	return true
