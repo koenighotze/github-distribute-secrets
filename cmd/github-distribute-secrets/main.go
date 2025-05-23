@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"log"
 
-	"koenighotze.de/github-distribute-secrets/config"
-	"koenighotze.de/github-distribute-secrets/github"
-	"koenighotze.de/github-distribute-secrets/onepassword"
+	"koenighotze.de/github-distribute-secrets/internal/config"
+	"koenighotze.de/github-distribute-secrets/internal/github"
+	"koenighotze.de/github-distribute-secrets/internal/onepassword"
 )
 
 func main() {

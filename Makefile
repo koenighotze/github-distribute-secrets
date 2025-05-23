@@ -6,13 +6,13 @@ clean:
 	go clean -x -i
 
 fmt:
-	go fmt ./...
+	go fmt ./cmd/... ./internal/...
 
 vet: fmt
-	go vet ./...
+	go vet ./cmd/... ./internal/...
 
 get.dependencies:
-	go get .
+	go mod tidy
 
 test: get.dependencies
 	echo TODO
@@ -21,7 +21,7 @@ test.report: get.dependencies
 	go test -json > TestResults.json
 
 build: vet get.dependencies
-	go build -o cmd/
+	go build -o github-distribute-secrets ./cmd/github-distribute-secrets
 
 run.local:
-	go run gh-distribute-secrets.go
+	go run ./cmd/github-distribute-secrets/main.go

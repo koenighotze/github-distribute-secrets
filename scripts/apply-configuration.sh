@@ -9,4 +9,5 @@ set -o pipefail
 # enable debug mode, by running your script as TRACE=1
 if [[ "${TRACE-0}" == "1" ]]; then set -o xtrace; fi
 
-python3 main.py config.yml
+# Run the Go binary
+./github-distribute-secrets
