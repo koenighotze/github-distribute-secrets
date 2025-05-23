@@ -45,8 +45,6 @@ func applyConfiguration(configuration *config.Configuration) (allOk bool) {
 
 	allOk = true
 	for _, repository := range configuration.Repositories {
-		log.Default().Printf("Handling repository: %s\n", repository)
-
 		if ok := applyConfigurationToRepository(configuration.GetConfigurationForRepository(repository), repository, op, gh); !ok {
 			log.Default().Printf("Cannot apply config to repository %s successfully!", repository)
 			allOk = false
