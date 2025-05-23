@@ -2,6 +2,9 @@
 
 .PHONY: all build test vet clean
 
+install.tools:
+	go install golang.org/x/vuln/cmd/govulncheck@latest
+
 clean:
 	go clean -x -i
 
@@ -10,6 +13,19 @@ fmt:
 
 vet: fmt
 	go vet ./cmd/... ./internal/...
+
+deps.upgrade:
+	go get -u ./...
+	go mod tidy
+
+deps.vendor:
+	go mod vendor
+
+deps.vulncheck:
+	govulncheck ./...
+
+deps.nancy:
+	go list -json -deps ./... | docker run --rm -i sonatypecommunity/nancy:latest sleuth
 
 get.dependencies:
 	go mod tidy
