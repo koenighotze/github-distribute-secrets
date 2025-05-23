@@ -14,6 +14,9 @@ fmt:
 vet: fmt
 	go vet ./cmd/... ./internal/...
 
+lint:
+	golangci-lint run ./...
+
 deps.upgrade:
 	go get -u ./...
 	go mod tidy
