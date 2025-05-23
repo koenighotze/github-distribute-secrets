@@ -20,8 +20,6 @@ type OnePasswordClient interface {
 type cliClient struct{}
 
 func (d cliClient) GetSecret(secretPath string) (secret string, err error) {
-	log.Default().Printf("Reading secret with path %s", secretPath)
-
 	out, err := exec.Command("op", "read", secretPath).Output()
 	if err != nil {
 		log.Default().Printf("Error reading secret: %s", err)
@@ -40,7 +38,6 @@ type cachedClient struct {
 
 func (c cachedClient) GetSecret(secretPath string) (secret string, err error) {
 	if cachedSecret, exists := c.Cache[secretPath]; exists {
-		log.Default().Printf("Using cached value for secret: %s", secretPath)
 		return cachedSecret.Value, cachedSecret.Err
 	}
 
