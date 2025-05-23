@@ -13,7 +13,7 @@ type GithubClient struct {
 }
 
 func (gh GithubClient) AddSecretToRepository(key string, secret string, repositoy string) (err error) {
-	log.Default().Printf("Adding secret %s", key)
+	log.Default().Printf("In repository %s. Adding secret %s", repositoy, key)
 	cmd := exec.Command("gh", "secret", "set", key, "--body", secret, "--repo", repositoy)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
@@ -21,8 +21,6 @@ func (gh GithubClient) AddSecretToRepository(key string, secret string, reposito
 			key, repositoy, err, string(output))
 		return
 	}
-
-	log.Default().Printf("Successfully added secret %s to repository %s", key, repositoy)
 	return nil
 }
 
