@@ -40,3 +40,7 @@ common:
 reposiotory-name:
   name-of-the-secret: reference-to-the-1password-value
 ```
+## TODO DUMP
+
+chat.promptFiles (Experimental): Enable or disable reusable prompt files.
+chat.promptFilesLocations (Experimental): Specify the location of prompt files. Set to true to use the default location (.github/prompts), or use the { "/path/to/folder": boolean } notation to specify a different path. Relative paths are resolved from the root folder(s) of your workspace.

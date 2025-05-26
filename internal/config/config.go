@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"maps"
 	"os"
+	"sort"
 
 	"github.com/goccy/go-yaml"
 )
@@ -14,6 +15,8 @@ type Configuration struct {
 	Repositories []string
 }
 
+var readFileFunc = os.ReadFile
+
 func (c Configuration) GetConfigurationForRepository(repository string) RepositoryConfiguration {
 	merged := make(RepositoryConfiguration)
 
@@ -23,6 +26,19 @@ func (c Configuration) GetConfigurationForRepository(repository string) Reposito
 	return merged
 }
 
+func extractRepositoryNamesFromConfig(rawConfig map[string]RepositoryConfiguration) []string {
+	result := make([]string, 0, len(rawConfig))
+	for key := range maps.Keys(rawConfig) {
+		if key == "common" {
+			continue
+		}
+
+		result = append(result, key)
+	}
+	sort.Strings(result)
+	return result
+}
+
 func NewConfigFromReader(reader *bytes.Reader) (config *Configuration, err error) {
 	config = &Configuration{}
 	dec := yaml.NewDecoder(reader)
@@ -30,19 +46,13 @@ func NewConfigFromReader(reader *bytes.Reader) (config *Configuration, err error
 		return nil, err
 	}
 
-	for key := range maps.Keys(config.rawConfig) {
-		if key == "common" {
-			continue
-		}
-
-		config.Repositories = append(config.Repositories, key)
-	}
+	config.Repositories = extractRepositoryNamesFromConfig(config.rawConfig)
 
 	return config, nil
 }
 
 func NewConfigFromFile(path string) (config *Configuration, err error) {
-	configFile, err := os.ReadFile(path)
+	configFile, err := readFileFunc(path)
 	if err != nil {
 		return nil, err
 	}

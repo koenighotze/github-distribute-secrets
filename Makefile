@@ -34,10 +34,13 @@ get.dependencies:
 	go mod tidy
 
 test: get.dependencies
-	echo TODO
+	go test -v ./internal/... ./cmd/... -coverprofile=coverage.out
 
 test.report: get.dependencies
-	go test -json > TestResults.json
+	go test -json ./internal/... ./cmd/... > TestResults.json
+
+test.coverage: test
+	go tool cover -html=coverage.out
 
 build: vet get.dependencies
 	go build -o github-distribute-secrets ./cmd/github-distribute-secrets
