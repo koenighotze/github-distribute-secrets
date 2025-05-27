@@ -6,6 +6,15 @@ import (
 	"strings"
 )
 
+type CommandRunner interface {
+	Run(name string, args ...string) ([]byte, error)
+}
+type cliCommandRunner struct{}
+
+func (c cliCommandRunner) Run(name string, args ...string) ([]byte, error) {
+	return exec.Command(name, args...).Output()
+}
+
 type CacheEntry struct {
 	Value string
 	Err   error
@@ -17,10 +26,12 @@ type OnePasswordClient interface {
 	GetSecret(secretPath string) (secret string, err error)
 }
 
-type cliClient struct{}
+type cliClient struct {
+	runner CommandRunner
+}
 
 func (d cliClient) GetSecret(secretPath string) (secret string, err error) {
-	out, err := exec.Command("op", "read", secretPath).Output()
+	out, err := d.runner.Run("op", "read", secretPath)
 	if err != nil {
 		log.Default().Printf("Error reading secret: %s", err)
 		return
@@ -54,6 +65,8 @@ func (c cachedClient) GetSecret(secretPath string) (secret string, err error) {
 func NewClient() OnePasswordClient {
 	return cachedClient{
 		Cache: make(SecretCacheType),
-		Op:    cliClient{},
+		Op: cliClient{
+			runner: cliCommandRunner{},
+		},
 	}
 }
