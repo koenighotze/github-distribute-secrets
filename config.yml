@@ -16,6 +16,9 @@ koenighotze/kh-gcp-seed:
 koenighotze/go-playground:
   GCP_RESOURCE_POSTFIX: op://kh-development/kh-gcp-bootstrap/gcp_resource_postfix
 
+koenighotze/github-distribute-secrets:
+  # no special flags
+
 # Uncomment and add secrets for the following projects as needed:
 # blog
 # bodleian-end-to-end-testing

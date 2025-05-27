@@ -11,8 +11,8 @@ permissions:
   contents: read
 
 jobs:
-  lint:
-    name: Lint
+  qa:
+    name: QA
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -27,10 +27,53 @@ jobs:
         uses: golangci/golangci-lint-action@v8
         with:
           args: --timeout=5m
+      - name: Vet
+        run: make vet
+
+  security:
+    name: Security Scan
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
+          cache: true
+
+      - name: Install dependencies
+        run: make get.dependencies
+
+      - name: Run govulncheck
+        run: |
+          go install golang.org/x/vuln/cmd/govulncheck@latest
+          govulncheck ./...
+
+  test:
+    name: Test
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
+          cache: true
+      - name: Install dependencies
+        run: make get.dependencies
+      - name: Test
+        run: make test.report
 
   build:
     name: Build & Test
     runs-on: ubuntu-24.04
+    needs:
+      - test
+      - qa
+      - security
 
     steps:
       - uses: actions/checkout@v4
@@ -65,23 +108,3 @@ jobs:
 
       - name: Build
         run: make build
-
-  security:
-    name: Security Scan
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: "1.24"
-          cache: true
-
-      - name: Install dependencies
-        run: make get.dependencies
-
-      - name: Run govulncheck
-        run: |
-          go install golang.org/x/vuln/cmd/govulncheck@latest
-          govulncheck ./...

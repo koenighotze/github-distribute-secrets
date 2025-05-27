@@ -42,7 +42,7 @@ test.report: get.dependencies
 test.coverage: test
 	go tool cover -html=coverage.out
 
-build: vet get.dependencies
+build: get.dependencies
 	go build -o github-distribute-secrets ./cmd/github-distribute-secrets
 
 run.local:
