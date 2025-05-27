@@ -1,5 +1,7 @@
 # Secret distributor
 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/f90eeb7872aa48d587f95a5375a35bed)](https://app.codacy.com/gh/koenighotze/github-distribute-secrets/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![Codacy Coverage Badge](https://app.codacy.com/project/badge/Coverage/f90eeb7872aa48d587f95a5375a35bed)](https://app.codacy.com/gh/koenighotze/github-distribute-secrets/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
 [![Build](https://github.com/koenighotze/github-distribute-secrets/actions/workflows/build.yml/badge.svg)](https://github.com/koenighotze/github-distribute-secrets/actions/workflows/build.yml)
 
 Run `scripts/apply-configuration.sh` to apply the secrets to the repositories.
