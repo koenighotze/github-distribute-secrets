@@ -4,7 +4,7 @@
 [![Codacy Coverage Badge](https://app.codacy.com/project/badge/Coverage/f90eeb7872aa48d587f95a5375a35bed)](https://app.codacy.com/gh/koenighotze/github-distribute-secrets/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
 [![Build](https://github.com/koenighotze/github-distribute-secrets/actions/workflows/build.yml/badge.svg)](https://github.com/koenighotze/github-distribute-secrets/actions/workflows/build.yml)
 
-Run `scripts/apply-configuration.sh` to apply the secrets to the repositories.
+Run `./github-distribute-secrets` to apply the secrets to the repositories. Or using the "scripted" version use `make run.local`.
 
 ## Project Structure
 
@@ -41,7 +41,3 @@ common:
 reposiotory-name:
   name-of-the-secret: reference-to-the-1password-value
 ```
-## TODO DUMP
-
-chat.promptFiles (Experimental): Enable or disable reusable prompt files.
-chat.promptFilesLocations (Experimental): Specify the location of prompt files. Set to true to use the default location (.github/prompts), or use the { "/path/to/folder": boolean } notation to specify a different path. Relative paths are resolved from the root folder(s) of your workspace.
