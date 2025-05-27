@@ -66,9 +66,15 @@ jobs:
         run: make get.dependencies
       - name: Test
         run: make test.report
+      - name: Run codacy-coverage-reporter
+        uses: codacy/codacy-coverage-reporter-action@v1.3.0
+        with:
+          api-token: ${{ secrets.CODACY_API_TOKEN }}
+          coverage-reports: coverage.out
+          force-coverage-parser: go
 
   build:
-    name: Build & Test
+    name: Build
     runs-on: ubuntu-24.04
     needs:
       - test

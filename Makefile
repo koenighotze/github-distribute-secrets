@@ -39,7 +39,7 @@ test: get.dependencies
 test.report: get.dependencies
 	go test -json ./internal/... ./cmd/... > TestResults.json
 
-test.coverage: test
+test.coverage.html: test
 	go tool cover -html=coverage.out
 
 build: get.dependencies
