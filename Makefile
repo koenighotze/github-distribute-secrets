@@ -36,9 +36,6 @@ get.dependencies:
 test: get.dependencies
 	go test -v ./internal/... ./cmd/... -coverprofile=coverage.out
 
-test.report: get.dependencies
-	go test -json ./internal/... ./cmd/... > TestResults.json
-
 test.coverage.html: test
 	go tool cover -html=coverage.out
 
