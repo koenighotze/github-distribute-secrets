@@ -65,7 +65,7 @@ jobs:
       - name: Install dependencies
         run: make get.dependencies
       - name: Test
-        run: make test.report
+        run: make test
       - name: Run codacy-coverage-reporter
         uses: codacy/codacy-coverage-reporter-action@v1.3.0
         with:
