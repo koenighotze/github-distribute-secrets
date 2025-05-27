@@ -80,7 +80,7 @@ func TestNewConfigFromReader(t *testing.T) {
 		}
 
 		reader := bytes.NewReader([]byte(yamlConfigurationCommonOnly))
-		result, err := NewConfigFromReader(reader)
+		result, err := newConfigFromReader(reader)
 
 		assert.Nil(t, err)
 		assert.Equal(t, expectedConfig, result)
@@ -97,7 +97,7 @@ func TestNewConfigFromReader(t *testing.T) {
 		}
 
 		reader := bytes.NewReader([]byte(yamlConfigurationFull))
-		result, err := NewConfigFromReader(reader)
+		result, err := newConfigFromReader(reader)
 		sort.Strings(result.Repositories)
 
 		assert.Nil(t, err)
@@ -106,7 +106,7 @@ func TestNewConfigFromReader(t *testing.T) {
 
 	t.Run("should return the error if the configuration was invalid", func(t *testing.T) {
 		reader := bytes.NewReader([]byte("something invalid"))
-		result, err := NewConfigFromReader(reader)
+		result, err := newConfigFromReader(reader)
 
 		assert.NotNil(t, err)
 		assert.Nil(t, result)
@@ -116,7 +116,7 @@ func TestNewConfigFromReader(t *testing.T) {
 func TestGetConfigurationForRepository(t *testing.T) {
 	t.Run("should return the configuration containing common and repo", func(t *testing.T) {
 		reader := bytes.NewReader([]byte(yamlConfigurationFull))
-		config, _ := NewConfigFromReader(reader)
+		config, _ := newConfigFromReader(reader)
 
 		result := config.GetConfigurationForRepository("repo1")
 
@@ -128,7 +128,7 @@ func TestGetConfigurationForRepository(t *testing.T) {
 
 	t.Run("should return the configuration without the fields of other repos", func(t *testing.T) {
 		reader := bytes.NewReader([]byte(yamlConfigurationFull))
-		config, _ := NewConfigFromReader(reader)
+		config, _ := newConfigFromReader(reader)
 
 		result := config.GetConfigurationForRepository("repo1")
 
@@ -137,7 +137,7 @@ func TestGetConfigurationForRepository(t *testing.T) {
 
 	t.Run("should return the common section if the repo is not found", func(t *testing.T) {
 		reader := bytes.NewReader([]byte(yamlConfigurationFull))
-		config, _ := NewConfigFromReader(reader)
+		config, _ := newConfigFromReader(reader)
 
 		result := config.GetConfigurationForRepository("not there")
 
@@ -148,7 +148,7 @@ func TestGetConfigurationForRepository(t *testing.T) {
 
 	t.Run("should return an repo configuration if nothing common is defined", func(t *testing.T) {
 		reader := bytes.NewReader([]byte(yamlConfigurationNoCommon))
-		config, _ := NewConfigFromReader(reader)
+		config, _ := newConfigFromReader(reader)
 
 		result := config.GetConfigurationForRepository("repo1")
 
@@ -166,7 +166,7 @@ repo1:
    A: C
    B: D
 `))
-		config, _ := NewConfigFromReader(reader)
+		config, _ := newConfigFromReader(reader)
 
 		result := config.GetConfigurationForRepository("repo1")
 
@@ -180,23 +180,17 @@ repo1:
 
 func TestNewConfigFromFile(t *testing.T) {
 	t.Run("should return the error if reading the file fails", func(t *testing.T) {
-		orgFileFunc := readFileFunc
-		readFileFunc = func(name string) ([]byte, error) {
-			return nil, os.ErrExist
+		client := configFileReader{
+			fileReader: func(name string) ([]byte, error) {
+				return nil, os.ErrExist
+			},
 		}
-		defer func() { readFileFunc = orgFileFunc }()
 
-		_, err := NewConfigFromFile("somefile")
+		_, err := client.ReadConfiguration("somefile")
 
 		assert.Equal(t, os.ErrExist, err)
 	})
 	t.Run("should return the configuration", func(t *testing.T) {
-		orgFileFunc := readFileFunc
-		readFileFunc = func(name string) ([]byte, error) {
-			return []byte(yamlConfigurationFull), nil
-		}
-		defer func() { readFileFunc = orgFileFunc }()
-
 		expectedConfig := &Configuration{
 			Repositories: []string{"repo1", "repo2"},
 			rawConfig: map[string]RepositoryConfiguration{
@@ -206,7 +200,14 @@ func TestNewConfigFromFile(t *testing.T) {
 			},
 		}
 
-		result, err := NewConfigFromFile("somefile")
+		client := configFileReader{
+			fileReader: func(name string) ([]byte, error) {
+				return []byte(yamlConfigurationFull), nil
+			},
+		}
+
+		result, err := client.ReadConfiguration("somefile")
+
 		sort.Strings(result.Repositories)
 
 		assert.Nil(t, err)
@@ -215,13 +216,13 @@ func TestNewConfigFromFile(t *testing.T) {
 	})
 
 	t.Run("should return the error if the file contains non-yaml data", func(t *testing.T) {
-		orgFileFunc := readFileFunc
-		readFileFunc = func(name string) ([]byte, error) {
-			return []byte("ffff"), nil
+		client := configFileReader{
+			fileReader: func(name string) ([]byte, error) {
+				return []byte("ffff"), nil
+			},
 		}
-		defer func() { readFileFunc = orgFileFunc }()
 
-		_, err := NewConfigFromFile("somefile")
+		_, err := client.ReadConfiguration("somefile")
 
 		assert.Contains(t, err.Error(), "mapping")
 	})

@@ -15,8 +15,6 @@ type Configuration struct {
 	Repositories []string
 }
 
-var readFileFunc = os.ReadFile
-
 func (c Configuration) GetConfigurationForRepository(repository string) RepositoryConfiguration {
 	merged := make(RepositoryConfiguration)
 
@@ -39,7 +37,7 @@ func extractRepositoryNamesFromConfig(rawConfig map[string]RepositoryConfigurati
 	return result
 }
 
-func NewConfigFromReader(reader *bytes.Reader) (config *Configuration, err error) {
+func newConfigFromReader(reader *bytes.Reader) (config *Configuration, err error) {
 	config = &Configuration{}
 	dec := yaml.NewDecoder(reader)
 	if err = dec.Decode(&config.rawConfig); err != nil {
@@ -51,11 +49,25 @@ func NewConfigFromReader(reader *bytes.Reader) (config *Configuration, err error
 	return config, nil
 }
 
-func NewConfigFromFile(path string) (config *Configuration, err error) {
-	configFile, err := readFileFunc(path)
+type ConfigFileReader interface {
+	ReadConfiguration(path string) (config *Configuration, err error)
+}
+
+type configFileReader struct {
+	fileReader func(name string) ([]byte, error)
+}
+
+func (reader configFileReader) ReadConfiguration(path string) (config *Configuration, err error) {
+	configFile, err := reader.fileReader(path)
 	if err != nil {
 		return nil, err
 	}
 
-	return NewConfigFromReader(bytes.NewReader(configFile))
+	return newConfigFromReader(bytes.NewReader(configFile))
+}
+
+func NewConfigFileReader() ConfigFileReader {
+	return configFileReader{
+		fileReader: os.ReadFile,
+	}
 }

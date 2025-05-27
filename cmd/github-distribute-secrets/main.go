@@ -12,7 +12,7 @@ import (
 func main() {
 	fmt.Println("Github Secret Distribution")
 
-	configuration, err := config.NewConfigFromFile("./config.yml")
+	configuration, err := config.NewConfigFileReader().ReadConfiguration("./config.yml")
 	if err != nil {
 		panic(fmt.Errorf("failed to read config file: %w", err))
 	}
