@@ -15,10 +15,10 @@ const (
 )
 
 func TestNewClient(t *testing.T) {
-	t.Run("should return a client that uses the cli.CommandRunner", func(t *testing.T) {
+	t.Run("should return a client", func(t *testing.T) {
 		result := NewClient()
 
-		_, ok := result.runner.(cli.CommandRunner)
+		_, ok := result.runner.(cli.CliCommandRunner)
 		assert.True(t, ok, "Expected runner to be of type cli.CommandRunner")
 	})
 }
