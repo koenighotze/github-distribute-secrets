@@ -228,3 +228,13 @@ func TestNewConfigFromFile(t *testing.T) {
 	})
 
 }
+
+func TestNewConfigFileReader(t *testing.T) {
+	t.Run("should return the file based config file reader", func(t *testing.T) {
+		result := NewConfigFileReader()
+
+		_, ok := result.(configFileReader)
+
+		assert.True(t, ok, "Expected result to be of type configFileReader")
+	})
+}

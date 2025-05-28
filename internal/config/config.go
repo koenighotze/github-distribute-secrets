@@ -14,6 +14,9 @@ type Configuration struct {
 	rawConfig    map[string]RepositoryConfiguration
 	Repositories []string
 }
+type ConfigFileReader interface {
+	ReadConfiguration(path string) (config *Configuration, err error)
+}
 
 func (c Configuration) GetConfigurationForRepository(repository string) RepositoryConfiguration {
 	merged := make(RepositoryConfiguration)
@@ -47,10 +50,6 @@ func newConfigFromReader(reader *bytes.Reader) (config *Configuration, err error
 	config.Repositories = extractRepositoryNamesFromConfig(config.rawConfig)
 
 	return config, nil
-}
-
-type ConfigFileReader interface {
-	ReadConfiguration(path string) (config *Configuration, err error)
 }
 
 type configFileReader struct {
