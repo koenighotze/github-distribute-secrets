@@ -12,7 +12,7 @@ type CommandRunner interface {
 type cliCommandRunner struct{}
 
 func (c cliCommandRunner) Run(name string, args ...string) ([]byte, error) {
-	return exec.Command(name, args...).Output()
+	return exec.Command(name, args...).CombinedOutput()
 }
 
 type CacheEntry struct {
