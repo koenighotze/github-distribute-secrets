@@ -34,7 +34,7 @@ get.dependencies:
 	go mod tidy
 
 test: get.dependencies
-	go test -v ./internal/... ./cmd/... -coverprofile=coverage.out
+	go test ./internal/... ./cmd/... -coverprofile=coverage.out
 
 test.coverage.html: test
 	go tool cover -html=coverage.out
