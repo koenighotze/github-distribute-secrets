@@ -2,18 +2,10 @@ package onepassword
 
 import (
 	"log"
-	"os/exec"
 	"strings"
+
+	"koenighotze.de/github-distribute-secrets/internal/common/cli"
 )
-
-type CommandRunner interface {
-	Run(name string, args ...string) ([]byte, error)
-}
-type cliCommandRunner struct{}
-
-func (c cliCommandRunner) Run(name string, args ...string) ([]byte, error) {
-	return exec.Command(name, args...).CombinedOutput()
-}
 
 type CacheEntry struct {
 	Value string
@@ -27,7 +19,7 @@ type OnePasswordClient interface {
 }
 
 type cliClient struct {
-	runner CommandRunner
+	runner cli.CommandRunner
 }
 
 func (d cliClient) GetSecret(secretPath string) (secret string, err error) {
@@ -66,7 +58,7 @@ func NewClient() OnePasswordClient {
 	return cachedClient{
 		Cache: make(SecretCacheType),
 		Op: cliClient{
-			runner: cliCommandRunner{},
+			runner: cli.NewCommandRunner(),
 		},
 	}
 }
