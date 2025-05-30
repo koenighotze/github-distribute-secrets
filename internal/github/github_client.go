@@ -7,14 +7,14 @@ import (
 )
 
 type Github interface {
-	addSecretToRepository(key string, secret string, repositoy string) (err error)
+	AddSecretToRepository(key string, secret string, repositoy string) (err error)
 }
 
 type GithubClient struct {
 	runner cli.CommandRunner
 }
 
-func (gh GithubClient) AddSecretToRepository(key string, secret string, repositoy string) (err error) {
+func (gh *GithubClient) AddSecretToRepository(key string, secret string, repositoy string) (err error) {
 	log.Default().Printf("In repository %s. Adding secret %s", repositoy, key)
 	output, err := gh.runner.Run("gh", "secret", "set", key, "--body", secret, "--repo", repositoy)
 	if err != nil {
@@ -25,8 +25,8 @@ func (gh GithubClient) AddSecretToRepository(key string, secret string, reposito
 	return nil
 }
 
-func NewClient() GithubClient {
-	return GithubClient{
+func NewClient() Github {
+	return &GithubClient{
 		runner: cli.NewCommandRunner(),
 	}
 }

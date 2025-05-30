@@ -18,7 +18,7 @@ func TestNewClient(t *testing.T) {
 	t.Run("should return a client", func(t *testing.T) {
 		result := NewClient()
 
-		_, ok := result.runner.(cli.CliCommandRunner)
+		_, ok := result.(*GithubClient)
 		assert.True(t, ok, "Expected runner to be of type cli.CommandRunner")
 	})
 }

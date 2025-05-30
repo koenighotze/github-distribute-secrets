@@ -41,3 +41,7 @@ common:
 reposiotory-name:
   name-of-the-secret: reference-to-the-1password-value
 ```
+
+## TODOS
+
+- extract 1password and github into real go modules

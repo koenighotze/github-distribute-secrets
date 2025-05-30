@@ -74,13 +74,13 @@ func TestNewConfigFromReader(t *testing.T) {
 	t.Run("should return the common configration", func(t *testing.T) {
 		expectedConfig := &Configuration{
 			Repositories: []string{},
-			rawConfig: map[string]RepositoryConfiguration{
+			RawConfig: map[string]RepositoryConfiguration{
 				"common": map[string]string{"KEY0": "VAL0"},
 			},
 		}
 
 		reader := bytes.NewReader([]byte(yamlConfigurationCommonOnly))
-		result, err := newConfigFromReader(reader)
+		result, err := NewConfigFromReader(reader)
 
 		assert.Nil(t, err)
 		assert.Equal(t, expectedConfig, result)
@@ -89,7 +89,7 @@ func TestNewConfigFromReader(t *testing.T) {
 	t.Run("should initialize the repositories", func(t *testing.T) {
 		expectedConfig := &Configuration{
 			Repositories: []string{"repo1", "repo2"},
-			rawConfig: map[string]RepositoryConfiguration{
+			RawConfig: map[string]RepositoryConfiguration{
 				"common": map[string]string{"KEY0": "VAL0"},
 				"repo1":  map[string]string{"KEY1": "VAL1"},
 				"repo2":  map[string]string{"KEY2": "VAL2"},
@@ -97,7 +97,7 @@ func TestNewConfigFromReader(t *testing.T) {
 		}
 
 		reader := bytes.NewReader([]byte(yamlConfigurationFull))
-		result, err := newConfigFromReader(reader)
+		result, err := NewConfigFromReader(reader)
 		sort.Strings(result.Repositories)
 
 		assert.Nil(t, err)
@@ -106,7 +106,7 @@ func TestNewConfigFromReader(t *testing.T) {
 
 	t.Run("should return the error if the configuration was invalid", func(t *testing.T) {
 		reader := bytes.NewReader([]byte("something invalid"))
-		result, err := newConfigFromReader(reader)
+		result, err := NewConfigFromReader(reader)
 
 		assert.NotNil(t, err)
 		assert.Nil(t, result)
@@ -116,7 +116,7 @@ func TestNewConfigFromReader(t *testing.T) {
 func TestGetConfigurationForRepository(t *testing.T) {
 	t.Run("should return the configuration containing common and repo", func(t *testing.T) {
 		reader := bytes.NewReader([]byte(yamlConfigurationFull))
-		config, _ := newConfigFromReader(reader)
+		config, _ := NewConfigFromReader(reader)
 
 		result := config.GetConfigurationForRepository("repo1")
 
@@ -128,7 +128,7 @@ func TestGetConfigurationForRepository(t *testing.T) {
 
 	t.Run("should return the configuration without the fields of other repos", func(t *testing.T) {
 		reader := bytes.NewReader([]byte(yamlConfigurationFull))
-		config, _ := newConfigFromReader(reader)
+		config, _ := NewConfigFromReader(reader)
 
 		result := config.GetConfigurationForRepository("repo1")
 
@@ -137,7 +137,7 @@ func TestGetConfigurationForRepository(t *testing.T) {
 
 	t.Run("should return the common section if the repo is not found", func(t *testing.T) {
 		reader := bytes.NewReader([]byte(yamlConfigurationFull))
-		config, _ := newConfigFromReader(reader)
+		config, _ := NewConfigFromReader(reader)
 
 		result := config.GetConfigurationForRepository("not there")
 
@@ -148,7 +148,7 @@ func TestGetConfigurationForRepository(t *testing.T) {
 
 	t.Run("should return an repo configuration if nothing common is defined", func(t *testing.T) {
 		reader := bytes.NewReader([]byte(yamlConfigurationNoCommon))
-		config, _ := newConfigFromReader(reader)
+		config, _ := NewConfigFromReader(reader)
 
 		result := config.GetConfigurationForRepository("repo1")
 
@@ -166,7 +166,7 @@ repo1:
    A: C
    B: D
 `))
-		config, _ := newConfigFromReader(reader)
+		config, _ := NewConfigFromReader(reader)
 
 		result := config.GetConfigurationForRepository("repo1")
 
@@ -193,7 +193,7 @@ func TestNewConfigFromFile(t *testing.T) {
 	t.Run("should return the configuration", func(t *testing.T) {
 		expectedConfig := &Configuration{
 			Repositories: []string{"repo1", "repo2"},
-			rawConfig: map[string]RepositoryConfiguration{
+			RawConfig: map[string]RepositoryConfiguration{
 				"common": map[string]string{"KEY0": "VAL0"},
 				"repo1":  map[string]string{"KEY1": "VAL1"},
 				"repo2":  map[string]string{"KEY2": "VAL2"},

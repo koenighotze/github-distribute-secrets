@@ -29,7 +29,7 @@ func TestNewClient(t *testing.T) {
 	t.Run("should return the caching client", func(t *testing.T) {
 		result := NewClient()
 
-		_, ok := result.(cachedClient)
+		_, ok := result.(*cachedClient)
 
 		assert.True(t, ok, "Expected result to be of type cachedClient")
 	})
@@ -76,7 +76,7 @@ func TestGetSecretWithCache(t *testing.T) {
 		mockRunner := createMockOnePasswordCommandRunner(t, output, err)
 		cliClient := cachedClient{
 			Cache: make(SecretCacheType),
-			Op: cliClient{
+			Op: &cliClient{
 				runner: mockRunner,
 			},
 		}

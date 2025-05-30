@@ -11,7 +11,7 @@ import (
 
 type RepositoryConfiguration map[string]string
 type Configuration struct {
-	rawConfig    map[string]RepositoryConfiguration
+	RawConfig    map[string]RepositoryConfiguration
 	Repositories []string
 }
 type ConfigFileReader interface {
@@ -21,8 +21,8 @@ type ConfigFileReader interface {
 func (c Configuration) GetConfigurationForRepository(repository string) RepositoryConfiguration {
 	merged := make(RepositoryConfiguration)
 
-	maps.Copy(merged, c.rawConfig["common"])
-	maps.Copy(merged, c.rawConfig[repository])
+	maps.Copy(merged, c.RawConfig["common"])
+	maps.Copy(merged, c.RawConfig[repository])
 
 	return merged
 }
@@ -40,14 +40,14 @@ func extractRepositoryNamesFromConfig(rawConfig map[string]RepositoryConfigurati
 	return result
 }
 
-func newConfigFromReader(reader *bytes.Reader) (config *Configuration, err error) {
+func NewConfigFromReader(reader *bytes.Reader) (config *Configuration, err error) {
 	config = &Configuration{}
 	dec := yaml.NewDecoder(reader)
-	if err = dec.Decode(&config.rawConfig); err != nil {
+	if err = dec.Decode(&config.RawConfig); err != nil {
 		return nil, err
 	}
 
-	config.Repositories = extractRepositoryNamesFromConfig(config.rawConfig)
+	config.Repositories = extractRepositoryNamesFromConfig(config.RawConfig)
 
 	return config, nil
 }
@@ -62,7 +62,7 @@ func (reader configFileReader) ReadConfiguration(path string) (config *Configura
 		return nil, err
 	}
 
-	return newConfigFromReader(bytes.NewReader(configFile))
+	return NewConfigFromReader(bytes.NewReader(configFile))
 }
 
 func NewConfigFileReader() ConfigFileReader {

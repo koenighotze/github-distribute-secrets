@@ -10,39 +10,43 @@ import (
 )
 
 func main() {
+	githubSecretDistribution(config.NewConfigFileReader(), onepassword.NewClient(), github.NewClient())
+}
+
+func githubSecretDistribution(configFileReader config.ConfigFileReader, op onepassword.OnePasswordClient, gh github.Github) {
 	fmt.Println("Github Secret Distribution")
 
-	configuration, err := config.NewConfigFileReader().ReadConfiguration("./config.yml")
+	configuration, err := configFileReader.ReadConfiguration("./config.yml")
 	if err != nil {
 		panic(fmt.Errorf("failed to read config file: %w", err))
 	}
 
-	if allOk := applyConfiguration(configuration); !allOk {
+	if allOk := applyConfiguration(configuration, op, gh); !allOk {
 		log.Default().Fatalln("Configuration was not applied successfully!")
 	}
 }
 
-func applyConfigurationToRepository(configMap config.RepositoryConfiguration, repositoy string, op onepassword.OnePasswordClient, gh github.GithubClient) (ok bool) {
-	for key, onePasswordPath := range configMap {
+func applyConfigurationToRepository(configMap config.RepositoryConfiguration, repositoy string, op onepassword.OnePasswordClient, gh github.Github) (ok bool) {
+	ok = true
 
+	for key, onePasswordPath := range configMap {
 		secret, err := op.GetSecret(onePasswordPath)
 		if err != nil {
 			log.Default().Printf("Error reading secret %s: %v", key, err)
+			ok = false
 			continue
 		}
 
 		if err = gh.AddSecretToRepository(key, secret, repositoy); err != nil {
 			log.Default().Printf("Error adding secret with key %s to repository %s: %v", key, repositoy, err)
+			ok = false
 		}
 	}
 
-	return true
+	return ok
 }
 
-func applyConfiguration(configuration *config.Configuration) (allOk bool) {
-	op := onepassword.NewClient()
-	gh := github.NewClient()
-
+func applyConfiguration(configuration *config.Configuration, op onepassword.OnePasswordClient, gh github.Github) (allOk bool) {
 	allOk = true
 	for _, repository := range configuration.Repositories {
 		if ok := applyConfigurationToRepository(configuration.GetConfigurationForRepository(repository), repository, op, gh); !ok {

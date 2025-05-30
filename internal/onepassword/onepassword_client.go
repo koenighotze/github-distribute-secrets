@@ -22,7 +22,7 @@ type cliClient struct {
 	runner cli.CommandRunner
 }
 
-func (d cliClient) GetSecret(secretPath string) (secret string, err error) {
+func (d *cliClient) GetSecret(secretPath string) (secret string, err error) {
 	out, err := d.runner.Run("op", "read", secretPath)
 	if err != nil {
 		log.Default().Printf("Error reading secret: %s", err)
@@ -39,7 +39,7 @@ type cachedClient struct {
 	Op    OnePasswordClient
 }
 
-func (c cachedClient) GetSecret(secretPath string) (secret string, err error) {
+func (c *cachedClient) GetSecret(secretPath string) (secret string, err error) {
 	if cachedSecret, exists := c.Cache[secretPath]; exists {
 		return cachedSecret.Value, cachedSecret.Err
 	}
@@ -55,10 +55,12 @@ func (c cachedClient) GetSecret(secretPath string) (secret string, err error) {
 }
 
 func NewClient() OnePasswordClient {
-	return cachedClient{
+	client := &cachedClient{
 		Cache: make(SecretCacheType),
-		Op: cliClient{
+		Op: &cliClient{
 			runner: cli.NewCommandRunner(),
 		},
 	}
+
+	return client
 }
