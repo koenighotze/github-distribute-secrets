@@ -9,6 +9,13 @@ import (
 	"koenighotze.de/github-distribute-secrets/pkg/onepassword"
 )
 
+var (
+	myNewGhClient              = github.NewClient
+	myNewOpClient              = onepassword.NewClient
+	myNewConfigFileReader      = config.NewConfigFileReader
+	myGithubSecretDistribution = githubSecretDistribution
+)
+
 func main() {
 	dryRun := flag.Bool("dry-run", false, "Simulate execution without making changes")
 	flag.Parse()
@@ -16,10 +23,10 @@ func main() {
 		log.Println("RUNNING IN DRY-RUN MODE - Will not change anything!")
 	}
 
-	gh := github.NewClient(*dryRun)
-	op := onepassword.NewClient()
+	gh := myNewGhClient(*dryRun)
+	op := myNewOpClient()
 
-	if !githubSecretDistribution(config.NewConfigFileReader(), op, gh) {
+	if !myGithubSecretDistribution(myNewConfigFileReader(), op, gh) {
 		log.Default().Fatalln("Not all configuration was applied successfully!")
 	}
 }
