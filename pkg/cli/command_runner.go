@@ -6,11 +6,11 @@ type CommandRunner interface {
 	Run(name string, args ...string) ([]byte, error)
 }
 
-type CliCommandRunner struct {
+type cliCommandRunner struct {
 	exec func(name string, arg ...string) ([]byte, error)
 }
 
-func (c CliCommandRunner) Run(name string, args ...string) ([]byte, error) {
+func (c cliCommandRunner) Run(name string, args ...string) ([]byte, error) {
 	return c.exec(name, args...)
 }
 
@@ -19,7 +19,7 @@ func defaultExec(name string, args ...string) ([]byte, error) {
 }
 
 func NewCommandRunner() CommandRunner {
-	return CliCommandRunner{
+	return cliCommandRunner{
 		exec: defaultExec,
 	}
 }

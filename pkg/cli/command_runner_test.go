@@ -11,8 +11,8 @@ func TestNewCommandRunner(t *testing.T) {
 		runner := NewCommandRunner()
 
 		assert.NotNil(t, runner)
-		_, ok := runner.(CliCommandRunner)
-		assert.True(t, ok, "Expected NewCommandRunner to return a CliCommandRunner")
+		_, ok := runner.(cliCommandRunner)
+		assert.True(t, ok, "Expected NewCommandRunner to return a cliCommandRunner")
 	})
 
 	type mockExec struct {
@@ -31,7 +31,7 @@ func TestNewCommandRunner(t *testing.T) {
 
 	t.Run("should return the output of the executor", func(t *testing.T) {
 		defaultMockExec.exectedReturn = []byte("thereturn")
-		runner := CliCommandRunner{
+		runner := cliCommandRunner{
 			exec: defaultMockExec.exec,
 		}
 
@@ -43,7 +43,7 @@ func TestNewCommandRunner(t *testing.T) {
 	t.Run("should return the error of the executor", func(t *testing.T) {
 		defaultMockExec.exectedReturn = nil
 		defaultMockExec.exectedError = assert.AnError
-		runner := CliCommandRunner{
+		runner := cliCommandRunner{
 			exec: defaultMockExec.exec,
 		}
 
