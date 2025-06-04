@@ -2,6 +2,7 @@ package config
 
 import (
 	"bytes"
+	"fmt"
 	"maps"
 	"os"
 	"sort"
@@ -59,7 +60,7 @@ type configFileReader struct {
 func (reader configFileReader) ReadConfiguration(path string) (config *Configuration, err error) {
 	configFile, err := reader.fileReader(path)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to read config file %s: %w", path, err)
 	}
 
 	return NewConfigFromReader(bytes.NewReader(configFile))

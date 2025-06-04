@@ -67,7 +67,7 @@ func TestGetSecret(t *testing.T) {
 		_, err := client.GetSecret(testSecretPath)
 
 		assert.ErrorContains(t, err, "bumm")
-		assert.Equal(t, expectedError, err)
+		assert.ErrorIs(t, err, expectedError)
 	})
 }
 

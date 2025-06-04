@@ -1,7 +1,7 @@
 package onepassword
 
 import (
-	"log"
+	"fmt"
 	"strings"
 
 	"koenighotze.de/github-distribute-secrets/pkg/cli"
@@ -25,8 +25,7 @@ type cliClient struct {
 func (d *cliClient) GetSecret(secretPath string) (secret string, err error) {
 	out, err := d.runner.Run("op", "read", secretPath)
 	if err != nil {
-		log.Default().Printf("Error reading secret: %s", err)
-		return
+		return "", fmt.Errorf("failed to read secret %s: %w", secret, err)
 	}
 
 	secret = strings.TrimSpace(string(out))

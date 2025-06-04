@@ -75,7 +75,7 @@ func TestAddSecretToRepository(t *testing.T) {
 
 		err := client.AddSecretToRepository(testSecretKey, testSecretValue, testRepoName)
 
-		assert.Error(t, err, "Expected error when GitHub CLI fails")
-		assert.Equal(t, mockError, err, "Expected the error from the command runner")
+		assert.Error(t, err)
+		assert.ErrorIs(t, err, mockError)
 	})
 }

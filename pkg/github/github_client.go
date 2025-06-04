@@ -1,6 +1,7 @@
 package github
 
 import (
+	"fmt"
 	"log"
 
 	"koenighotze.de/github-distribute-secrets/pkg/cli"
@@ -16,11 +17,8 @@ type cliGithubClient struct {
 
 func (gh *cliGithubClient) AddSecretToRepository(key string, secret string, repositoy string) (err error) {
 	log.Default().Printf("In repository %s. Adding secret %s", repositoy, key)
-	output, err := gh.runner.Run("gh", "secret", "set", key, "--body", secret, "--repo", repositoy)
-	if err != nil {
-		log.Default().Printf("Error adding secret %s to repository %s: %v\nOutput: %s",
-			key, repositoy, err, string(output))
-		return
+	if _, err = gh.runner.Run("gh", "secret", "set", key, "--body", secret, "--repo", repositoy); err != nil {
+		return fmt.Errorf("failed adding secret as key %s to repository %s: %w", key, repositoy, err)
 	}
 	return nil
 }

@@ -188,7 +188,7 @@ func TestNewConfigFromFile(t *testing.T) {
 
 		_, err := client.ReadConfiguration("somefile")
 
-		assert.Equal(t, os.ErrExist, err)
+		assert.ErrorIs(t, err, os.ErrExist)
 	})
 	t.Run("should return the configuration", func(t *testing.T) {
 		expectedConfig := &Configuration{
