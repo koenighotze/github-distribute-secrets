@@ -18,7 +18,7 @@ func TestNewClient(t *testing.T) {
 	t.Run("should return a client", func(t *testing.T) {
 		result := NewClient()
 
-		_, ok := result.(*GithubClient)
+		_, ok := result.(*cliGithubClient)
 		assert.True(t, ok, "Expected runner to be of type cli.CommandRunner")
 	})
 }
@@ -57,7 +57,7 @@ func TestCreateMockCommandRunner(t *testing.T) {
 func TestAddSecretToRepository(t *testing.T) {
 	t.Run("should add a secret to the repository successfully", func(t *testing.T) {
 		mockRunner := createMockCommandRunner(t, []byte("Secret added successfully"), nil)
-		client := GithubClient{
+		client := cliGithubClient{
 			runner: mockRunner,
 		}
 
@@ -69,7 +69,7 @@ func TestAddSecretToRepository(t *testing.T) {
 	t.Run("should return an error if adding the secret fails", func(t *testing.T) {
 		mockError := assert.AnError
 		mockRunner := createMockCommandRunner(t, []byte("Error adding secret"), mockError)
-		client := GithubClient{
+		client := cliGithubClient{
 			runner: mockRunner,
 		}
 

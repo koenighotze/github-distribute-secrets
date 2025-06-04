@@ -72,10 +72,10 @@ func TestGetSecret(t *testing.T) {
 }
 
 func TestGetSecretWithCache(t *testing.T) {
-	prepareClient := func(path string, output []byte, err error, cache *CacheEntry) cachedClient {
+	prepareClient := func(path string, output []byte, err error, cache *cacheEntry) cachedClient {
 		mockRunner := createMockOnePasswordCommandRunner(t, output, err)
 		cliClient := cachedClient{
-			Cache: make(SecretCacheType),
+			Cache: make(secretCacheType),
 			Op: &cliClient{
 				runner: mockRunner,
 			},
@@ -96,7 +96,7 @@ func TestGetSecretWithCache(t *testing.T) {
 	})
 
 	t.Run("should return the cached value if cached", func(t *testing.T) {
-		cliClient := prepareClient(testSecretPath, []byte("UncachedOutput"), nil, &CacheEntry{Value: "cached", Err: nil})
+		cliClient := prepareClient(testSecretPath, []byte("UncachedOutput"), nil, &cacheEntry{Value: "cached", Err: nil})
 
 		result, _ := cliClient.GetSecret(testSecretPath)
 
@@ -113,7 +113,7 @@ func TestGetSecretWithCache(t *testing.T) {
 
 	t.Run("should return the cached error if an error occured", func(t *testing.T) {
 		expectedError := errors.New("cachederror")
-		cliClient := prepareClient(testSecretPath, nil, assert.AnError, &CacheEntry{Value: "cached", Err: expectedError})
+		cliClient := prepareClient(testSecretPath, nil, assert.AnError, &cacheEntry{Value: "cached", Err: expectedError})
 
 		_, err := cliClient.GetSecret(testSecretPath)
 

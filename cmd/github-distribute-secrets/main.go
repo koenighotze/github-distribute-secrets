@@ -5,15 +5,15 @@ import (
 	"log"
 
 	"koenighotze.de/github-distribute-secrets/internal/config"
-	"koenighotze.de/github-distribute-secrets/internal/github"
-	"koenighotze.de/github-distribute-secrets/internal/onepassword"
+	"koenighotze.de/github-distribute-secrets/pkg/github"
+	"koenighotze.de/github-distribute-secrets/pkg/onepassword"
 )
 
 func main() {
 	githubSecretDistribution(config.NewConfigFileReader(), onepassword.NewClient(), github.NewClient())
 }
 
-func githubSecretDistribution(configFileReader config.ConfigFileReader, op onepassword.OnePasswordClient, gh github.Github) {
+func githubSecretDistribution(configFileReader config.ConfigFileReader, op onepassword.OnePasswordClient, gh github.GithubClient) {
 	fmt.Println("Github Secret Distribution")
 
 	configuration, err := configFileReader.ReadConfiguration("./config.yml")
@@ -26,7 +26,7 @@ func githubSecretDistribution(configFileReader config.ConfigFileReader, op onepa
 	}
 }
 
-func applyConfigurationToRepository(configMap config.RepositoryConfiguration, repositoy string, op onepassword.OnePasswordClient, gh github.Github) (ok bool) {
+func applyConfigurationToRepository(configMap config.RepositoryConfiguration, repositoy string, op onepassword.OnePasswordClient, gh github.GithubClient) (ok bool) {
 	ok = true
 
 	for key, onePasswordPath := range configMap {
@@ -46,7 +46,7 @@ func applyConfigurationToRepository(configMap config.RepositoryConfiguration, re
 	return ok
 }
 
-func applyConfiguration(configuration *config.Configuration, op onepassword.OnePasswordClient, gh github.Github) (allOk bool) {
+func applyConfiguration(configuration *config.Configuration, op onepassword.OnePasswordClient, gh github.GithubClient) (allOk bool) {
 	allOk = true
 	for _, repository := range configuration.Repositories {
 		if ok := applyConfigurationToRepository(configuration.GetConfigurationForRepository(repository), repository, op, gh); !ok {

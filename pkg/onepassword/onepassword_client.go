@@ -7,12 +7,12 @@ import (
 	"koenighotze.de/github-distribute-secrets/pkg/cli"
 )
 
-type CacheEntry struct {
+type cacheEntry struct {
 	Value string
 	Err   error
 }
 
-type SecretCacheType map[string]CacheEntry
+type secretCacheType map[string]cacheEntry
 
 type OnePasswordClient interface {
 	GetSecret(secretPath string) (secret string, err error)
@@ -35,7 +35,7 @@ func (d *cliClient) GetSecret(secretPath string) (secret string, err error) {
 }
 
 type cachedClient struct {
-	Cache SecretCacheType
+	Cache secretCacheType
 	Op    OnePasswordClient
 }
 
@@ -46,9 +46,9 @@ func (c *cachedClient) GetSecret(secretPath string) (secret string, err error) {
 
 	secret, err = c.Op.GetSecret(secretPath)
 	if err == nil {
-		c.Cache[secretPath] = CacheEntry{secret, nil}
+		c.Cache[secretPath] = cacheEntry{secret, nil}
 	} else {
-		c.Cache[secretPath] = CacheEntry{"", err}
+		c.Cache[secretPath] = cacheEntry{"", err}
 	}
 
 	return
@@ -56,7 +56,7 @@ func (c *cachedClient) GetSecret(secretPath string) (secret string, err error) {
 
 func NewClient() OnePasswordClient {
 	client := &cachedClient{
-		Cache: make(SecretCacheType),
+		Cache: make(secretCacheType),
 		Op: &cliClient{
 			runner: cli.NewCommandRunner(),
 		},
