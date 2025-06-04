@@ -16,14 +16,18 @@ type cliGithubClient struct {
 }
 
 func (gh *cliGithubClient) AddSecretToRepository(key string, secret string, repositoy string) (err error) {
-	log.Default().Printf("In repository %s. Adding secret %s", repositoy, key)
+	log.Default().Printf("In repository %s. Adding secret with key %s", repositoy, key)
 	if _, err = gh.runner.Run("gh", "secret", "set", key, "--body", secret, "--repo", repositoy); err != nil {
 		return fmt.Errorf("failed adding secret as key %s to repository %s: %w", key, repositoy, err)
 	}
 	return nil
 }
 
-func NewClient() GithubClient {
+func NewClient(dryRun bool) GithubClient {
+	if dryRun {
+		return withDryRun()
+	}
+
 	return &cliGithubClient{
 		runner: cli.NewCommandRunner(),
 	}

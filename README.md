@@ -49,4 +49,4 @@ reposiotory-name:
 - Add timeouts for external commands
 - Add version information to builds
 - Add progress indicators during secret distribution
-- Add a --dry-run mode
+- Add confirmation question

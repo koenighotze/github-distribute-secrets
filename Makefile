@@ -7,6 +7,7 @@ install.tools:
 
 clean:
 	go clean -x -i
+	rm -f ./github-distribute-secrets
 
 fmt:
 	go fmt ./cmd/... ./internal/... ./pkg/...
@@ -36,7 +37,7 @@ get.dependencies:
 test: get.dependencies
 	go test ./internal/... ./cmd/... ./pkg/... -coverprofile=coverage.out
 
-test.coverage.html: test
+test.report: test
 	go tool cover -html=coverage.out
 
 build: get.dependencies

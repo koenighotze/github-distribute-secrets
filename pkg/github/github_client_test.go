@@ -15,12 +15,20 @@ const (
 )
 
 func TestNewClient(t *testing.T) {
-	t.Run("should return a client", func(t *testing.T) {
-		result := NewClient()
+	t.Run("should return a client if dry run is false", func(t *testing.T) {
+		result := NewClient(false)
 
 		_, ok := result.(*cliGithubClient)
 		assert.True(t, ok, "Expected runner to be of type cli.CommandRunner")
 	})
+
+	t.Run("should return a dry run client if dry run is true", func(t *testing.T) {
+		result := NewClient(true)
+
+		_, ok := result.(*dryRunGithubClient)
+		assert.True(t, ok, "Expected runner to be of type cli.CommandRunner")
+	})
+
 }
 
 func createMockCommandRunner(t *testing.T, output []byte, err error) cli.CommandRunner {
