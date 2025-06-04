@@ -45,3 +45,12 @@ reposiotory-name:
 ## TODOS
 
 - extract 1password and github into real go modules
+- Replace log.Default() with a structured logging library like zerolog or zap
+- Add timeouts for external commands
+- Add version information to builds
+- Add progress indicators during secret distribution
+- Add a --dry-run mode
+- Add more context to errors using fmt.Errorf("context: %w", err)
+- Consider adding a proper pkg directory for potentially reusable components
+
+
