@@ -4,7 +4,7 @@ import (
 	"log"
 	"strings"
 
-	"koenighotze.de/github-distribute-secrets/internal/common/cli"
+	"koenighotze.de/github-distribute-secrets/pkg/cli"
 )
 
 type CacheEntry struct {

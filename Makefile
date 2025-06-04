@@ -9,10 +9,10 @@ clean:
 	go clean -x -i
 
 fmt:
-	go fmt ./cmd/... ./internal/...
+	go fmt ./cmd/... ./internal/... ./pkg/...
 
 vet: fmt
-	go vet ./cmd/... ./internal/...
+	go vet ./cmd/... ./internal/... ./pkg/...
 
 lint:
 	golangci-lint run ./...
@@ -34,7 +34,7 @@ get.dependencies:
 	go mod tidy
 
 test: get.dependencies
-	go test ./internal/... ./cmd/... -coverprofile=coverage.out
+	go test ./internal/... ./cmd/... ./pkg/... -coverprofile=coverage.out
 
 test.coverage.html: test
 	go tool cover -html=coverage.out

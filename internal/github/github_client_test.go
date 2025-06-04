@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"koenighotze.de/github-distribute-secrets/internal/common/cli"
+	"koenighotze.de/github-distribute-secrets/pkg/cli"
 )
 
 const (

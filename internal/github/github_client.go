@@ -3,7 +3,7 @@ package github
 import (
 	"log"
 
-	"koenighotze.de/github-distribute-secrets/internal/common/cli"
+	"koenighotze.de/github-distribute-secrets/pkg/cli"
 )
 
 type Github interface {
