@@ -14,5 +14,4 @@ SCRIPTS=$(find . -type f -name "*.sh")
 for script in $SCRIPTS; do
     echo "Processing $script"
     shellcheck "$script"
-    #bashate "$script"
 done

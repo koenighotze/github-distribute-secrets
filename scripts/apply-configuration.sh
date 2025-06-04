@@ -9,5 +9,5 @@ set -o pipefail
 # enable debug mode, by running your script as TRACE=1
 if [[ "${TRACE-0}" == "1" ]]; then set -o xtrace; fi
 
-# Run the Go binary
+make build
 ./github-distribute-secrets

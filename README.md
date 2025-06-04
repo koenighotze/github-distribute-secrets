@@ -50,7 +50,3 @@ reposiotory-name:
 - Add version information to builds
 - Add progress indicators during secret distribution
 - Add a --dry-run mode
-- Add more context to errors using fmt.Errorf("context: %w", err)
-- Consider adding a proper pkg directory for potentially reusable components
-
-
