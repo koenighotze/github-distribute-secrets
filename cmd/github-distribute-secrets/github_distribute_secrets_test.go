@@ -17,12 +17,12 @@ func (m *MockOnePasswordClient) GetSecret(secretPath string) (secret string, err
 	return "something", m.expectedError
 }
 
-type MockGithubClient struct {
+type mockGithubClient struct {
 	calls         int
 	expectedError error
 }
 
-func (m *MockGithubClient) AddSecretToRepository(key string, secret string, repositoy string) (err error) {
+func (m *mockGithubClient) AddSecretToRepository(key string, secret string, repositoy string) (err error) {
 	m.calls++
 	return m.expectedError
 }
@@ -46,7 +46,7 @@ func TestApplyConfigurationToRepository(t *testing.T) {
 
 	t.Run("should not add a secret to the repo if reading the secret failed", func(t *testing.T) {
 		onePasswordClient := &MockOnePasswordClient{}
-		githubClient := &MockGithubClient{}
+		githubClient := &mockGithubClient{}
 		onePasswordClient.expectedError = assert.AnError
 
 		_ = applyConfigurationToRepository(configMap, repository, onePasswordClient, githubClient)
@@ -57,7 +57,7 @@ func TestApplyConfigurationToRepository(t *testing.T) {
 
 	t.Run("should return true if the config map is empty", func(t *testing.T) {
 		onePasswordClient := &MockOnePasswordClient{}
-		githubClient := &MockGithubClient{}
+		githubClient := &mockGithubClient{}
 
 		result := applyConfigurationToRepository(config.RepositoryConfiguration{}, repository, onePasswordClient, githubClient)
 
@@ -68,7 +68,7 @@ func TestApplyConfigurationToRepository(t *testing.T) {
 
 	t.Run("should return true if all secrets where applied successfully", func(t *testing.T) {
 		onePasswordClient := &MockOnePasswordClient{}
-		githubClient := &MockGithubClient{}
+		githubClient := &mockGithubClient{}
 
 		result := applyConfigurationToRepository(configMap, repository, onePasswordClient, githubClient)
 
@@ -79,7 +79,7 @@ func TestApplyConfigurationToRepository(t *testing.T) {
 
 	t.Run("should return false if at least one secret was not applied successfully", func(t *testing.T) {
 		onePasswordClient := &MockOnePasswordClient{}
-		githubClient := &MockGithubClient{}
+		githubClient := &mockGithubClient{}
 		githubClient.expectedError = assert.AnError
 
 		result := applyConfigurationToRepository(configMap, repository, onePasswordClient, githubClient)
@@ -91,7 +91,7 @@ func TestApplyConfigurationToRepository(t *testing.T) {
 
 	t.Run("should return false if at least one secret could not be read", func(t *testing.T) {
 		onePasswordClient := &MockOnePasswordClient{}
-		githubClient := &MockGithubClient{}
+		githubClient := &mockGithubClient{}
 		onePasswordClient.expectedError = assert.AnError
 
 		result := applyConfigurationToRepository(configMap, repository, onePasswordClient, githubClient)
@@ -103,7 +103,7 @@ func TestApplyConfigurationToRepository(t *testing.T) {
 
 	t.Run("should apply all secrets of the config map to the repository", func(t *testing.T) {
 		onePasswordClient := &MockOnePasswordClient{}
-		githubClient := &MockGithubClient{}
+		githubClient := &mockGithubClient{}
 		configMap := config.RepositoryConfiguration{
 			"foo": "bar",
 			"faz": "fumm",
@@ -129,7 +129,7 @@ func TestApplyConfiguration(t *testing.T) {
 
 	t.Run("should return true if no errors occured", func(t *testing.T) {
 		onePasswordClient := &MockOnePasswordClient{}
-		githubClient := &MockGithubClient{}
+		githubClient := &mockGithubClient{}
 
 		result := applyConfiguration(configuration, onePasswordClient, githubClient)
 
@@ -138,7 +138,7 @@ func TestApplyConfiguration(t *testing.T) {
 
 	t.Run("should return false if at least one error occured", func(t *testing.T) {
 		onePasswordClient := &MockOnePasswordClient{}
-		githubClient := &MockGithubClient{}
+		githubClient := &mockGithubClient{}
 		onePasswordClient.expectedError = assert.AnError
 
 		result := applyConfiguration(configuration, onePasswordClient, githubClient)
@@ -148,7 +148,7 @@ func TestApplyConfiguration(t *testing.T) {
 
 	t.Run("should return true if repositories are empty", func(t *testing.T) {
 		onePasswordClient := &MockOnePasswordClient{}
-		githubClient := &MockGithubClient{}
+		githubClient := &mockGithubClient{}
 		configuration.Repositories = []string{}
 
 		result := applyConfiguration(configuration, onePasswordClient, githubClient)
@@ -158,7 +158,7 @@ func TestApplyConfiguration(t *testing.T) {
 
 	t.Run("should apply the configuration to all repositories", func(t *testing.T) {
 		onePasswordClient := &MockOnePasswordClient{}
-		githubClient := &MockGithubClient{}
+		githubClient := &mockGithubClient{}
 		configuration.RawConfig = map[string]config.RepositoryConfiguration{
 			"foo": map[string]string{"k": "v"},
 			"bar": map[string]string{"k": "v"},
@@ -183,7 +183,7 @@ func TestGithubSecretDistribution(t *testing.T) {
 	}
 	t.Run("should read the configuration", func(t *testing.T) {
 		onePasswordClient := &MockOnePasswordClient{}
-		githubClient := &MockGithubClient{}
+		githubClient := &mockGithubClient{}
 		configFileReader := &MockConfigFileReader{
 			expectedConfig: configuration,
 		}
@@ -195,7 +195,7 @@ func TestGithubSecretDistribution(t *testing.T) {
 
 	t.Run("should apply the configuration", func(t *testing.T) {
 		onePasswordClient := &MockOnePasswordClient{}
-		githubClient := &MockGithubClient{}
+		githubClient := &mockGithubClient{}
 		configFileReader := &MockConfigFileReader{
 			expectedConfig: configuration,
 		}
@@ -207,7 +207,7 @@ func TestGithubSecretDistribution(t *testing.T) {
 
 	t.Run("should panic even if a single application fails", func(t *testing.T) {
 		onePasswordClient := &MockOnePasswordClient{}
-		githubClient := &MockGithubClient{
+		githubClient := &mockGithubClient{
 			expectedError: assert.AnError,
 		}
 		configFileReader := &MockConfigFileReader{
@@ -221,7 +221,7 @@ func TestGithubSecretDistribution(t *testing.T) {
 
 	t.Run("should panic if reading the config failed", func(t *testing.T) {
 		onePasswordClient := &MockOnePasswordClient{}
-		githubClient := &MockGithubClient{}
+		githubClient := &mockGithubClient{}
 		configFileReader := &MockConfigFileReader{
 			expectedError: assert.AnError,
 		}

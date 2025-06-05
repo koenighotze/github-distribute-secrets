@@ -50,3 +50,4 @@ reposiotory-name:
 - Add version information to builds
 - Add progress indicators during secret distribution
 - Add confirmation question
+- Add integration tests

@@ -37,6 +37,9 @@ get.dependencies:
 test: get.dependencies
 	go test ./internal/... ./cmd/... ./pkg/... -coverprofile=coverage.out
 
+test.all: get.dependencies
+	go test -tags=integration ./internal/... ./cmd/... ./pkg/... -coverprofile=coverage.out
+
 test.report: test
 	go tool cover -html=coverage.out
 
