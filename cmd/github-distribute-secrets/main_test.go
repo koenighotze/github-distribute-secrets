@@ -30,7 +30,7 @@ func TestMain(t *testing.T) {
 		calledNewGhClientWithValue = dryRun
 		return &mockGithubClient{}
 	}
-	myGithubSecretDistribution = func(configFileReader config.ConfigFileReader, op onepassword.OnePasswordClient, gh github.GithubClient) bool {
+	myGithubSecretDistribution = func(configFileReader config.ConfigFileReader, op onepassword.OnePasswordClient, gh github.GithubClient, dumpConfig bool) bool {
 		calledGithubSecretDistribution = true
 		return true
 	}
@@ -42,6 +42,36 @@ func TestMain(t *testing.T) {
 		main()
 
 		assert.True(t, calledNewGhClientWithValue)
+	})
+
+	t.Run("should pass dump=true to githubSecretDistribution when --dump-config flag is provided", func(t *testing.T) {
+		flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
+		os.Args = []string{"cmd", "--dump-config"}
+
+		dumpFlagValue := false
+		myGithubSecretDistribution = func(configFileReader config.ConfigFileReader, op onepassword.OnePasswordClient, gh github.GithubClient, dumpConfig bool) bool {
+			dumpFlagValue = dumpConfig
+			return true
+		}
+
+		main()
+
+		assert.True(t, dumpFlagValue, "Should pass true for dump flag when --dump-config is provided")
+	})
+
+	t.Run("should pass dump=false to githubSecretDistribution when --dump-config flag is not provided", func(t *testing.T) {
+		flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
+		os.Args = []string{"cmd"}
+
+		dumpFlagValue := true
+		myGithubSecretDistribution = func(configFileReader config.ConfigFileReader, op onepassword.OnePasswordClient, gh github.GithubClient, dumpConfig bool) bool {
+			dumpFlagValue = dumpConfig
+			return true
+		}
+
+		main()
+
+		assert.False(t, dumpFlagValue, "Should pass false for dump flag when --dump-config is not provided")
 	})
 
 	t.Run("should use the default client if the flag is omitted", func(t *testing.T) {

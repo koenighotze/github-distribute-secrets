@@ -36,6 +36,10 @@ common:
 repo1:
    KEY1: VAL1
 `
+
+	// Test constants for DumpConfiguration
+	testCommonSecretsText = "Common Secrets"
+	testRepo1Text         = "repo1:"
 )
 
 func TestExtractingRepositoriesFromConfiguration(t *testing.T) {
@@ -236,5 +240,106 @@ func TestNewConfigFileReader(t *testing.T) {
 		_, ok := result.(configFileReader)
 
 		assert.True(t, ok, "Expected result to be of type configFileReader")
+	})
+}
+
+func TestDumpConfiguration(t *testing.T) {
+	t.Run("should include common and repository-specific secrets", func(t *testing.T) {
+		// Arrange
+		config := &Configuration{
+			RawConfig: map[string]RepositoryConfiguration{
+				"common": {
+					"COMMON_KEY": "common/path",
+				},
+				"repo1": {
+					"REPO1_KEY": "repo1/path",
+				},
+				"repo2": {
+					"REPO2_KEY": "repo2/path",
+				},
+			},
+			Repositories: []string{"repo1", "repo2"},
+		}
+
+		// Act
+		result := config.DumpConfiguration()
+
+		// Assert
+		assert.Contains(t, result, testCommonSecretsText)
+		assert.Contains(t, result, "COMMON_KEY")
+		assert.Contains(t, result, testRepo1Text)
+		assert.Contains(t, result, "REPO1_KEY")
+		assert.Contains(t, result, "repo2:")
+		assert.Contains(t, result, "REPO2_KEY")
+	})
+
+	t.Run("should handle configuration with no common secrets", func(t *testing.T) {
+		// Arrange
+		config := &Configuration{
+			RawConfig: map[string]RepositoryConfiguration{
+				"common": {},
+				"repo1": {
+					"REPO1_KEY": "repo1/path",
+				},
+			},
+			Repositories: []string{"repo1"},
+		}
+
+		// Act
+		result := config.DumpConfiguration()
+
+		// Assert
+		assert.NotContains(t, result, testCommonSecretsText)
+		assert.Contains(t, result, testRepo1Text)
+		assert.Contains(t, result, "REPO1_KEY")
+	})
+
+	t.Run("should handle empty configuration", func(t *testing.T) {
+		// Arrange
+		config := &Configuration{
+			RawConfig: map[string]RepositoryConfiguration{
+				"common": {},
+			},
+			Repositories: []string{},
+		}
+
+		// Act
+		result := config.DumpConfiguration()
+
+		// Assert
+		assert.Contains(t, result, "Configuration Summary")
+		assert.Contains(t, result, "Repository-Specific Configurations:")
+	})
+
+	t.Run("should include OnePassword paths in both common and repository config output", func(t *testing.T) {
+		// Arrange
+		config := &Configuration{
+			RawConfig: map[string]RepositoryConfiguration{
+				"common": {
+					"COMMON_KEY": "common/path/secret",
+					"SHARED_KEY": "shared/path/value",
+				},
+				"repo1": {
+					"REPO1_KEY": "repo1/path/specific",
+				},
+			},
+			Repositories: []string{"repo1"},
+		}
+
+		// Act
+		result := config.DumpConfiguration()
+
+		// Assert
+		// Check common section
+		assert.Contains(t, result, testCommonSecretsText)
+		assert.Contains(t, result, "COMMON_KEY: common/path/secret")
+		assert.Contains(t, result, "SHARED_KEY: shared/path/value")
+
+		// Check repo section
+		assert.Contains(t, result, testRepo1Text)
+		assert.Contains(t, result, "REPO1_KEY: repo1/path/specific")
+
+		// Check merged config in repo section (common keys show up in repo config)
+		assert.Contains(t, result, "COMMON_KEY: common/path/secret") // Common key should appear in repo config
 	})
 }

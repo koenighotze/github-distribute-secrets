@@ -71,3 +71,36 @@ func NewConfigFileReader() ConfigFileReader {
 		fileReader: os.ReadFile,
 	}
 }
+
+func (c Configuration) DumpConfiguration() string {
+	var buffer bytes.Buffer
+
+	buffer.WriteString("Configuration Summary:\n")
+	buffer.WriteString("=====================\n\n")
+
+	commonConfig := c.RawConfig["common"]
+	if len(commonConfig) > 0 {
+		buffer.WriteString("Common Secrets (applied to all repositories):\n")
+		for key, oppath := range commonConfig {
+			buffer.WriteString(fmt.Sprintf("  - %s: %s\n", key, oppath))
+		}
+		buffer.WriteString("\n")
+	}
+
+	buffer.WriteString("Repository-Specific Configurations:\n")
+	for _, repo := range c.Repositories {
+		repoConfig := c.GetConfigurationForRepository(repo)
+		buffer.WriteString(fmt.Sprintf("- %s:\n", repo))
+
+		if len(repoConfig) == 0 {
+			buffer.WriteString("  No secrets configured\n")
+		} else {
+			for key, oppath := range repoConfig {
+				buffer.WriteString(fmt.Sprintf("  - %s: %s\n", key, oppath))
+			}
+		}
+		buffer.WriteString("\n")
+	}
+
+	return buffer.String()
+}
