@@ -71,3 +71,39 @@ func NewConfigFileReader() ConfigFileReader {
 		fileReader: os.ReadFile,
 	}
 }
+
+// DumpConfiguration returns a formatted string representation of the configuration
+// that will be applied, showing which secrets will be set for each repository.
+func (c Configuration) DumpConfiguration() string {
+	var buffer bytes.Buffer
+
+	buffer.WriteString("Configuration Summary:\n")
+	buffer.WriteString("=====================\n\n")
+
+	// First show common secrets
+	commonConfig := c.RawConfig["common"]
+	if len(commonConfig) > 0 {
+		buffer.WriteString("Common Secrets (applied to all repositories):\n")
+		for key := range commonConfig {
+			buffer.WriteString(fmt.Sprintf("  - %s\n", key))
+		}
+		buffer.WriteString("\n")
+	}
+
+	// Then show per-repository secrets
+	buffer.WriteString("Repository-Specific Configurations:\n")
+	for _, repo := range c.Repositories {
+		repoConfig := c.GetConfigurationForRepository(repo)
+		buffer.WriteString(fmt.Sprintf("- %s:\n", repo))
+
+		if len(repoConfig) == 0 {
+			buffer.WriteString("  No secrets configured\n")
+		} else {
+			for key := range repoConfig {
+				buffer.WriteString(fmt.Sprintf("  - %s\n", key))
+			}
+		}
+	}
+
+	return buffer.String()
+}
