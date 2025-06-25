@@ -99,6 +99,7 @@ func (c Configuration) DumpConfiguration() string {
 				buffer.WriteString(fmt.Sprintf("  - %s: %s\n", key, oppath))
 			}
 		}
+		buffer.WriteString("\n")
 	}
 
 	return buffer.String()
