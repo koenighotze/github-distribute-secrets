@@ -15,6 +15,10 @@ func githubSecretDistribution(configFileReader config.ConfigFileReader, op onepa
 		panic(fmt.Errorf("failed to read config file: %w", err))
 	}
 
+	// Dump configuration before applying
+	configDump := configuration.DumpConfiguration()
+	fmt.Println(configDump)
+
 	if allOk := applyConfiguration(configuration, op, gh); !allOk {
 		log.Default().Panicf("Configuration was not applied successfully!")
 	}

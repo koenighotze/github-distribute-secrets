@@ -44,10 +44,10 @@ reposiotory-name:
 
 ## TODOS
 
-- extract 1password and github into real go modules
-- Replace log.Default() with a structured logging library like zerolog or zap
-- Add timeouts for external commands
-- Add version information to builds
-- Add progress indicators during secret distribution
-- Add confirmation question
-- Add integration tests
+- [ ] Extract 1password and github into real go modules
+- [ ] Replace log.Default() with a structured logging library like zerolog or zap
+- [ ] Add timeouts for external commands
+- [ ] Add version information to builds
+- [ ] Add progress indicators during secret distribution
+- [ ] Add confirmation question
+- [ ] Add integration tests

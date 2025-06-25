@@ -238,3 +238,72 @@ func TestNewConfigFileReader(t *testing.T) {
 		assert.True(t, ok, "Expected result to be of type configFileReader")
 	})
 }
+
+func TestDumpConfiguration(t *testing.T) {
+	t.Run("should include common and repository-specific secrets", func(t *testing.T) {
+		// Arrange
+		config := &Configuration{
+			RawConfig: map[string]RepositoryConfiguration{
+				"common": {
+					"COMMON_KEY": "common/path",
+				},
+				"repo1": {
+					"REPO1_KEY": "repo1/path",
+				},
+				"repo2": {
+					"REPO2_KEY": "repo2/path",
+				},
+			},
+			Repositories: []string{"repo1", "repo2"},
+		}
+
+		// Act
+		result := config.DumpConfiguration()
+
+		// Assert
+		assert.Contains(t, result, "Common Secrets")
+		assert.Contains(t, result, "COMMON_KEY")
+		assert.Contains(t, result, "repo1:")
+		assert.Contains(t, result, "REPO1_KEY")
+		assert.Contains(t, result, "repo2:")
+		assert.Contains(t, result, "REPO2_KEY")
+	})
+
+	t.Run("should handle configuration with no common secrets", func(t *testing.T) {
+		// Arrange
+		config := &Configuration{
+			RawConfig: map[string]RepositoryConfiguration{
+				"common": {},
+				"repo1": {
+					"REPO1_KEY": "repo1/path",
+				},
+			},
+			Repositories: []string{"repo1"},
+		}
+
+		// Act
+		result := config.DumpConfiguration()
+
+		// Assert
+		assert.NotContains(t, result, "Common Secrets")
+		assert.Contains(t, result, "repo1:")
+		assert.Contains(t, result, "REPO1_KEY")
+	})
+
+	t.Run("should handle empty configuration", func(t *testing.T) {
+		// Arrange
+		config := &Configuration{
+			RawConfig: map[string]RepositoryConfiguration{
+				"common": {},
+			},
+			Repositories: []string{},
+		}
+
+		// Act
+		result := config.DumpConfiguration()
+
+		// Assert
+		assert.Contains(t, result, "Configuration Summary")
+		assert.Contains(t, result, "Repository-Specific Configurations:")
+	})
+}
