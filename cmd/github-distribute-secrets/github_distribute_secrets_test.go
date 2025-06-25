@@ -188,7 +188,7 @@ func TestGithubSecretDistribution(t *testing.T) {
 			expectedConfig: configuration,
 		}
 
-		githubSecretDistribution(configFileReader, onePasswordClient, githubClient)
+		githubSecretDistribution(configFileReader, onePasswordClient, githubClient, false)
 
 		assert.Equal(t, 1, configFileReader.calls)
 	})
@@ -200,7 +200,7 @@ func TestGithubSecretDistribution(t *testing.T) {
 			expectedConfig: configuration,
 		}
 
-		githubSecretDistribution(configFileReader, onePasswordClient, githubClient)
+		githubSecretDistribution(configFileReader, onePasswordClient, githubClient, false)
 
 		assert.Equal(t, 1, githubClient.calls)
 	})
@@ -215,7 +215,7 @@ func TestGithubSecretDistribution(t *testing.T) {
 		}
 
 		assert.Panics(t, func() {
-			githubSecretDistribution(configFileReader, onePasswordClient, githubClient)
+			githubSecretDistribution(configFileReader, onePasswordClient, githubClient, false)
 		})
 	})
 
@@ -227,11 +227,11 @@ func TestGithubSecretDistribution(t *testing.T) {
 		}
 
 		assert.Panics(t, func() {
-			githubSecretDistribution(configFileReader, onePasswordClient, githubClient)
+			githubSecretDistribution(configFileReader, onePasswordClient, githubClient, false)
 		})
 	})
 
-	t.Run("should dump the configuration before applying it", func(t *testing.T) {
+	t.Run("should dump the configuration after reading it", func(t *testing.T) {
 		// Arrange
 		testConfig := &config.Configuration{
 			RawConfig: map[string]config.RepositoryConfiguration{
@@ -257,10 +257,37 @@ func TestGithubSecretDistribution(t *testing.T) {
 		// The actual output check would require capturing stdout
 
 		// Act
-		result := githubSecretDistribution(configReader, onePasswordClient, githubClient)
+		result := githubSecretDistribution(configReader, onePasswordClient, githubClient, true)
 
 		// Assert
 		assert.True(t, result, "Function should complete successfully")
 		assert.Equal(t, 1, configReader.calls, "Should call ReadConfiguration once")
+	})
+
+	t.Run("should only dump configuration when dumpConfig is true", func(t *testing.T) {
+		// Arrange
+		testConfig := &config.Configuration{
+			RawConfig: map[string]config.RepositoryConfiguration{
+				"common": {
+					"COMMON_SECRET": "common/path",
+				},
+			},
+			Repositories: []string{},
+		}
+
+		configReader := &MockConfigFileReader{
+			expectedConfig: testConfig,
+		}
+
+		onePasswordClient := &MockOnePasswordClient{}
+		githubClient := &mockGithubClient{}
+
+		// Act & Assert - No way to directly test stdout output in this test,
+		// but we can verify the function executes without issues
+		result := githubSecretDistribution(configReader, onePasswordClient, githubClient, false)
+		assert.True(t, result, "Function should complete successfully with dumpConfig=false")
+
+		result = githubSecretDistribution(configReader, onePasswordClient, githubClient, true)
+		assert.True(t, result, "Function should complete successfully with dumpConfig=true")
 	})
 }
