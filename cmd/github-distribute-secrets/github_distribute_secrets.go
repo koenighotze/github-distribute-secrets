@@ -9,15 +9,16 @@ import (
 	"koenighotze.de/github-distribute-secrets/pkg/onepassword"
 )
 
-func githubSecretDistribution(configFileReader config.ConfigFileReader, op onepassword.OnePasswordClient, gh github.GithubClient) bool {
+func githubSecretDistribution(configFileReader config.ConfigFileReader, op onepassword.OnePasswordClient, gh github.GithubClient, dumpConfig bool) bool {
 	configuration, err := configFileReader.ReadConfiguration("./config.yml")
 	if err != nil {
 		panic(fmt.Errorf("failed to read config file: %w", err))
 	}
 
-	// Dump configuration before applying
-	configDump := configuration.DumpConfiguration()
-	fmt.Println(configDump)
+	if dumpConfig {
+		configDump := configuration.DumpConfiguration()
+		fmt.Println(configDump)
+	}
 
 	if allOk := applyConfiguration(configuration, op, gh); !allOk {
 		log.Default().Panicf("Configuration was not applied successfully!")

@@ -36,6 +36,10 @@ common:
 repo1:
    KEY1: VAL1
 `
+
+	// Test constants for DumpConfiguration
+	testCommonSecretsText = "Common Secrets"
+	testRepo1Text         = "repo1:"
 )
 
 func TestExtractingRepositoriesFromConfiguration(t *testing.T) {
@@ -261,9 +265,9 @@ func TestDumpConfiguration(t *testing.T) {
 		result := config.DumpConfiguration()
 
 		// Assert
-		assert.Contains(t, result, "Common Secrets")
+		assert.Contains(t, result, testCommonSecretsText)
 		assert.Contains(t, result, "COMMON_KEY")
-		assert.Contains(t, result, "repo1:")
+		assert.Contains(t, result, testRepo1Text)
 		assert.Contains(t, result, "REPO1_KEY")
 		assert.Contains(t, result, "repo2:")
 		assert.Contains(t, result, "REPO2_KEY")
@@ -285,8 +289,8 @@ func TestDumpConfiguration(t *testing.T) {
 		result := config.DumpConfiguration()
 
 		// Assert
-		assert.NotContains(t, result, "Common Secrets")
-		assert.Contains(t, result, "repo1:")
+		assert.NotContains(t, result, testCommonSecretsText)
+		assert.Contains(t, result, testRepo1Text)
 		assert.Contains(t, result, "REPO1_KEY")
 	})
 
@@ -305,5 +309,37 @@ func TestDumpConfiguration(t *testing.T) {
 		// Assert
 		assert.Contains(t, result, "Configuration Summary")
 		assert.Contains(t, result, "Repository-Specific Configurations:")
+	})
+
+	t.Run("should include OnePassword paths in both common and repository config output", func(t *testing.T) {
+		// Arrange
+		config := &Configuration{
+			RawConfig: map[string]RepositoryConfiguration{
+				"common": {
+					"COMMON_KEY": "common/path/secret",
+					"SHARED_KEY": "shared/path/value",
+				},
+				"repo1": {
+					"REPO1_KEY": "repo1/path/specific",
+				},
+			},
+			Repositories: []string{"repo1"},
+		}
+
+		// Act
+		result := config.DumpConfiguration()
+
+		// Assert
+		// Check common section
+		assert.Contains(t, result, testCommonSecretsText)
+		assert.Contains(t, result, "COMMON_KEY: common/path/secret")
+		assert.Contains(t, result, "SHARED_KEY: shared/path/value")
+
+		// Check repo section
+		assert.Contains(t, result, testRepo1Text)
+		assert.Contains(t, result, "REPO1_KEY: repo1/path/specific")
+
+		// Check merged config in repo section (common keys show up in repo config)
+		assert.Contains(t, result, "COMMON_KEY: common/path/secret") // Common key should appear in repo config
 	})
 }
