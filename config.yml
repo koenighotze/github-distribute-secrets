@@ -3,6 +3,7 @@ common:
   CODACY_API_TOKEN: op://kh-development/Codacy/token
   DOCKER_REGISTRY_USERNAME: op://kh-development/Docker-github-workflow-actions/username
   DOCKER_REGISTRY_TOKEN: op://kh-development/Docker-github-workflow-actions/password
+  SONAR_TOKEN: op://kh-development/g4bwf3wd6qzzm5tc7fqrupjhwy/token
 
 # Secrets specific to the pdfdebugger project.
 koenighotze/pdfdebugger:
@@ -13,8 +14,8 @@ koenighotze/pdfdebugger:
 koenighotze/kh-gcp-seed:
   GCP_RESOURCE_POSTFIX: op://kh-development/kh-gcp-bootstrap/gcp_resource_postfix
 
-koenighotze/go-playground:
-  GCP_RESOURCE_POSTFIX: op://kh-development/kh-gcp-bootstrap/gcp_resource_postfix
+# koenighotze/go-playground:
+#   GCP_RESOURCE_POSTFIX: op://kh-development/kh-gcp-bootstrap/gcp_resource_postfix
 
 koenighotze/github-distribute-secrets:
   # no special flags
