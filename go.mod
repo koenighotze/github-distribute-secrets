@@ -2,7 +2,7 @@ module koenighotze.de/github-distribute-secrets
 
 go 1.24.2
 
-require github.com/goccy/go-yaml v1.18.0
+require github.com/goccy/go-yaml v1.19.2
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
