@@ -1,0 +1,28 @@
+# Python (legacy)
+.venv
+.mypy_cache
+.pytest_cache
+__pycache__
+
+# Binary
+github-distribute-secrets
+
+# Backup
+backup/
+
+# IDE files
+.idea/
+.vscode/
+
+# Test files
+TestResults.json
+
+# Go specific
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work

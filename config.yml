@@ -5,7 +5,6 @@ common:
   DOCKER_REGISTRY_TOKEN: op://kh-development/Docker-github-workflow-actions/password
   SONAR_TOKEN: op://kh-development/g4bwf3wd6qzzm5tc7fqrupjhwy/token
 
-# Secrets specific to the pdfdebugger project.
 koenighotze/pdfdebugger:
   # Add project-specific secrets here.
   # Example:
@@ -19,6 +18,10 @@ koenighotze/kh-gcp-seed:
 
 koenighotze/github-distribute-secrets:
   # no special flags
+
+koenighotze/aws-website-terraform:
+  AWS_ACCESS_KEY_ID: op://kh-development/aws-koenighotze-terraform-credentials/AWS_ACCESS_KEY_ID
+  AWS_SECRET_ACCESS_KEY: op://kh-development/aws-koenighotze-terraform-credentials/AWS_SECRET_ACCESS_KEY
 
 # Uncomment and add secrets for the following projects as needed:
 # blog
