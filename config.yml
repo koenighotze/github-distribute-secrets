@@ -20,6 +20,9 @@ koenighotze/kh-gcp-seed:
 koenighotze/github-distribute-secrets:
   # no special flags
 
+koenighotze/claude-sandbox:
+  # no special secrets — Docker credentials come from common
+
 koenighotze/aws-website-terraform:
   AWS_ACCESS_KEY_ID: op://kh-development/aws-koenighotze-terraform-credentials/AWS_ACCESS_KEY_ID
   AWS_SECRET_ACCESS_KEY: op://kh-development/aws-koenighotze-terraform-credentials/AWS_SECRET_ACCESS_KEY
