@@ -82,7 +82,7 @@ func (c Configuration) DumpConfiguration() string {
 	if len(commonConfig) > 0 {
 		buffer.WriteString("Common Secrets (applied to all repositories):\n")
 		for key, oppath := range commonConfig {
-			buffer.WriteString(fmt.Sprintf("  - %s: %s\n", key, oppath))
+			fmt.Fprintf(&buffer, "  - %s: %s\n", key, oppath)
 		}
 		buffer.WriteString("\n")
 	}
@@ -90,13 +90,13 @@ func (c Configuration) DumpConfiguration() string {
 	buffer.WriteString("Repository-Specific Configurations:\n")
 	for _, repo := range c.Repositories {
 		repoConfig := c.GetConfigurationForRepository(repo)
-		buffer.WriteString(fmt.Sprintf("- %s:\n", repo))
+		fmt.Fprintf(&buffer, "- %s:\n", repo)
 
 		if len(repoConfig) == 0 {
 			buffer.WriteString("  No secrets configured\n")
 		} else {
 			for key, oppath := range repoConfig {
-				buffer.WriteString(fmt.Sprintf("  - %s: %s\n", key, oppath))
+				fmt.Fprintf(&buffer, "  - %s: %s\n", key, oppath)
 			}
 		}
 		buffer.WriteString("\n")
