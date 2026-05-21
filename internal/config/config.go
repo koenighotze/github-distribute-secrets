@@ -3,6 +3,7 @@ package config
 import (
 	"bytes"
 	"fmt"
+	"io"
 	"maps"
 	"os"
 	"sort"
@@ -41,7 +42,7 @@ func extractRepositoryNamesFromConfig(rawConfig map[string]RepositoryConfigurati
 	return result
 }
 
-func NewConfigFromReader(reader *bytes.Reader) (config *Configuration, err error) {
+func NewConfigFromReader(reader io.Reader) (config *Configuration, err error) {
 	config = &Configuration{}
 	dec := yaml.NewDecoder(reader)
 	if err = dec.Decode(&config.RawConfig); err != nil {
