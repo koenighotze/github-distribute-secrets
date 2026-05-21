@@ -18,15 +18,6 @@ repo1:
 repo2:
    KEY2: VAL2
 `
-	yamlConfigurationOverwrites = `
-common:
-   KEY0: VAL0
-repo1:
-   KEY1: VAL1
-repo2:
-   KEY2: VAL2
-`
-
 	yamlConfigurationCommonOnly = `
 common:
    KEY0: VAL0
