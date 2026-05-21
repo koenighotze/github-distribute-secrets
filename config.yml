@@ -12,6 +12,7 @@ koenighotze/pdfdebugger:
 
 koenighotze/kh-gcp-seed:
   GCP_RESOURCE_POSTFIX: op://kh-development/kh-gcp-bootstrap/gcp_resource_postfix
+  KH_GCP_SETUP_ADMIN_GITHUB_TOKEN: op://kh-development/KH_GCP_SETUP_ADMIN_GITHUB_TOKEN/token
 
 # koenighotze/go-playground:
 #   GCP_RESOURCE_POSTFIX: op://kh-development/kh-gcp-bootstrap/gcp_resource_postfix
