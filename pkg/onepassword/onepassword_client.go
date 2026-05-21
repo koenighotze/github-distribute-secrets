@@ -25,7 +25,7 @@ type cliClient struct {
 func (d *cliClient) GetSecret(secretPath string) (secret string, err error) {
 	out, err := d.runner.Run("op", "read", secretPath)
 	if err != nil {
-		return "", fmt.Errorf("failed to read secret %s: %w", secret, err)
+		return "", fmt.Errorf("failed to read secret %s: %w", secretPath, err)
 	}
 
 	secret = strings.TrimSpace(string(out))

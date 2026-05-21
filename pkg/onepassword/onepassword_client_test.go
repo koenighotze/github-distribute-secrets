@@ -69,6 +69,16 @@ func TestGetSecret(t *testing.T) {
 		assert.ErrorContains(t, err, "bumm")
 		assert.ErrorIs(t, err, expectedError)
 	})
+
+	t.Run("should include the secret path in the error message", func(t *testing.T) {
+		client := cliClient{
+			runner: createMockOnePasswordCommandRunner(t, nil, errors.New("op failed")),
+		}
+
+		_, err := client.GetSecret(testSecretPath)
+
+		assert.ErrorContains(t, err, testSecretPath)
+	})
 }
 
 func TestGetSecretWithCache(t *testing.T) {
