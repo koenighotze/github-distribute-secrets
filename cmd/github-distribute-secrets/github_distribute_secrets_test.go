@@ -22,7 +22,7 @@ type mockGithubClient struct {
 	expectedError error
 }
 
-func (m *mockGithubClient) AddSecretToRepository(key string, secret string, repositoy string) (err error) {
+func (m *mockGithubClient) AddSecretToRepository(key string, secret string, repository string) (err error) {
 	m.calls++
 	return m.expectedError
 }

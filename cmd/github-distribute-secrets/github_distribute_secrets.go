@@ -27,7 +27,7 @@ func githubSecretDistribution(configFileReader config.ConfigFileReader, op onepa
 	return true
 }
 
-func applyConfigurationToRepository(configMap config.RepositoryConfiguration, repositoy string, op onepassword.OnePasswordClient, gh github.GithubClient) (ok bool) {
+func applyConfigurationToRepository(configMap config.RepositoryConfiguration, repository string, op onepassword.OnePasswordClient, gh github.GithubClient) (ok bool) {
 	ok = true
 
 	for key, onePasswordPath := range configMap {
@@ -38,8 +38,8 @@ func applyConfigurationToRepository(configMap config.RepositoryConfiguration, re
 			continue
 		}
 
-		if err = gh.AddSecretToRepository(key, secret, repositoy); err != nil {
-			log.Printf("Error adding secret with key %s to repository %s: %v", key, repositoy, err)
+		if err = gh.AddSecretToRepository(key, secret, repository); err != nil {
+			log.Printf("Error adding secret with key %s to repository %s: %v", key, repository, err)
 			ok = false
 		}
 	}
