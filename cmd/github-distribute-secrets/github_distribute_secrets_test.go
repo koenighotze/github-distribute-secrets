@@ -188,7 +188,7 @@ func TestGithubSecretDistribution(t *testing.T) {
 			expectedConfig: configuration,
 		}
 
-		githubSecretDistribution(configFileReader, onePasswordClient, githubClient, false)
+		_ = githubSecretDistribution(configFileReader, onePasswordClient, githubClient, false)
 
 		assert.Equal(t, 1, configFileReader.calls)
 	})
@@ -200,12 +200,12 @@ func TestGithubSecretDistribution(t *testing.T) {
 			expectedConfig: configuration,
 		}
 
-		githubSecretDistribution(configFileReader, onePasswordClient, githubClient, false)
+		_ = githubSecretDistribution(configFileReader, onePasswordClient, githubClient, false)
 
 		assert.Equal(t, 1, githubClient.calls)
 	})
 
-	t.Run("should panic even if a single application fails", func(t *testing.T) {
+	t.Run("should return error if a single application fails", func(t *testing.T) {
 		onePasswordClient := &MockOnePasswordClient{}
 		githubClient := &mockGithubClient{
 			expectedError: assert.AnError,
@@ -214,21 +214,43 @@ func TestGithubSecretDistribution(t *testing.T) {
 			expectedConfig: configuration,
 		}
 
-		assert.Panics(t, func() {
-			githubSecretDistribution(configFileReader, onePasswordClient, githubClient, false)
-		})
+		err := githubSecretDistribution(configFileReader, onePasswordClient, githubClient, false)
+
+		assert.Error(t, err)
 	})
 
-	t.Run("should panic if reading the config failed", func(t *testing.T) {
+	t.Run("should return error if reading the config failed", func(t *testing.T) {
 		onePasswordClient := &MockOnePasswordClient{}
 		githubClient := &mockGithubClient{}
 		configFileReader := &MockConfigFileReader{
 			expectedError: assert.AnError,
 		}
 
-		assert.Panics(t, func() {
-			githubSecretDistribution(configFileReader, onePasswordClient, githubClient, false)
-		})
+		err := githubSecretDistribution(configFileReader, onePasswordClient, githubClient, false)
+
+		assert.Error(t, err)
+	})
+
+	t.Run("should return error if reading config fails", func(t *testing.T) {
+		configFileReader := &MockConfigFileReader{expectedError: assert.AnError}
+
+		err := githubSecretDistribution(configFileReader, &MockOnePasswordClient{}, &mockGithubClient{}, false)
+
+		assert.ErrorIs(t, err, assert.AnError)
+	})
+
+	t.Run("should return error if applying config fails", func(t *testing.T) {
+		configFileReader := &MockConfigFileReader{
+			expectedConfig: &config.Configuration{
+				RawConfig:    map[string]config.RepositoryConfiguration{"repo1": {"key": "val"}},
+				Repositories: []string{"repo1"},
+			},
+		}
+		githubClient := &mockGithubClient{expectedError: assert.AnError}
+
+		err := githubSecretDistribution(configFileReader, &MockOnePasswordClient{}, githubClient, false)
+
+		assert.Error(t, err)
 	})
 
 	t.Run("should dump the configuration after reading it", func(t *testing.T) {
@@ -257,10 +279,10 @@ func TestGithubSecretDistribution(t *testing.T) {
 		// The actual output check would require capturing stdout
 
 		// Act
-		result := githubSecretDistribution(configReader, onePasswordClient, githubClient, true)
+		err := githubSecretDistribution(configReader, onePasswordClient, githubClient, true)
 
 		// Assert
-		assert.True(t, result, "Function should complete successfully")
+		assert.NoError(t, err, "Function should complete successfully")
 		assert.Equal(t, 1, configReader.calls, "Should call ReadConfiguration once")
 	})
 
@@ -284,10 +306,10 @@ func TestGithubSecretDistribution(t *testing.T) {
 
 		// Act & Assert - No way to directly test stdout output in this test,
 		// but we can verify the function executes without issues
-		result := githubSecretDistribution(configReader, onePasswordClient, githubClient, false)
-		assert.True(t, result, "Function should complete successfully with dumpConfig=false")
+		err := githubSecretDistribution(configReader, onePasswordClient, githubClient, false)
+		assert.NoError(t, err, "Function should complete successfully with dumpConfig=false")
 
-		result = githubSecretDistribution(configReader, onePasswordClient, githubClient, true)
-		assert.True(t, result, "Function should complete successfully with dumpConfig=true")
+		err = githubSecretDistribution(configReader, onePasswordClient, githubClient, true)
+		assert.NoError(t, err, "Function should complete successfully with dumpConfig=true")
 	})
 }
