@@ -33,6 +33,6 @@ func main() {
 	op := myNewOpClient()
 
 	if !myGithubSecretDistribution(myNewConfigFileReader(), op, gh, *dumpConfig) {
-		log.Default().Fatalln("Not all configuration was applied successfully!")
+		log.Fatalln("Not all configuration was applied successfully!")
 	}
 }

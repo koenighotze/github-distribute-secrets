@@ -21,7 +21,7 @@ func githubSecretDistribution(configFileReader config.ConfigFileReader, op onepa
 	}
 
 	if allOk := applyConfiguration(configuration, op, gh); !allOk {
-		log.Default().Panicf("Configuration was not applied successfully!")
+		log.Panicf("Configuration was not applied successfully!")
 	}
 
 	return true
@@ -33,13 +33,13 @@ func applyConfigurationToRepository(configMap config.RepositoryConfiguration, re
 	for key, onePasswordPath := range configMap {
 		secret, err := op.GetSecret(onePasswordPath)
 		if err != nil {
-			log.Default().Printf("Error reading secret %s: %v", key, err)
+			log.Printf("Error reading secret %s: %v", key, err)
 			ok = false
 			continue
 		}
 
 		if err = gh.AddSecretToRepository(key, secret, repositoy); err != nil {
-			log.Default().Printf("Error adding secret with key %s to repository %s: %v", key, repositoy, err)
+			log.Printf("Error adding secret with key %s to repository %s: %v", key, repositoy, err)
 			ok = false
 		}
 	}
@@ -51,7 +51,7 @@ func applyConfiguration(configuration *config.Configuration, op onepassword.OneP
 	allOk = true
 	for _, repository := range configuration.Repositories {
 		if ok := applyConfigurationToRepository(configuration.GetConfigurationForRepository(repository), repository, op, gh); !ok {
-			log.Default().Printf("Cannot apply config to repository %s successfully!", repository)
+			log.Printf("Cannot apply config to repository %s successfully!", repository)
 			allOk = false
 		}
 	}
