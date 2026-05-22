@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"os"
 	"sort"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -114,6 +115,15 @@ func TestNewConfigFromReader(t *testing.T) {
 
 		assert.NotNil(t, err)
 		assert.Nil(t, result)
+	})
+
+	t.Run("should accept any io.Reader, not only bytes.Reader", func(t *testing.T) {
+		reader := strings.NewReader(yamlConfigurationCommonOnly)
+
+		result, err := NewConfigFromReader(reader)
+
+		assert.Nil(t, err)
+		assert.NotNil(t, result)
 	})
 }
 
