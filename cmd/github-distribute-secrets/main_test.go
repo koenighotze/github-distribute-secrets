@@ -30,9 +30,9 @@ func TestMain(t *testing.T) {
 		calledNewGhClientWithValue = dryRun
 		return &mockGithubClient{}
 	}
-	myGithubSecretDistribution = func(configFileReader config.ConfigFileReader, op onepassword.OnePasswordClient, gh github.GithubClient, dumpConfig bool) bool {
+	myGithubSecretDistribution = func(configFileReader config.ConfigFileReader, op onepassword.OnePasswordClient, gh github.GithubClient, dumpConfig bool) error {
 		calledGithubSecretDistribution = true
-		return true
+		return nil
 	}
 
 	t.Run("should use the dry run client if the flag is provided", func(t *testing.T) {
@@ -49,9 +49,9 @@ func TestMain(t *testing.T) {
 		os.Args = []string{"cmd", "--dump-config"}
 
 		dumpFlagValue := false
-		myGithubSecretDistribution = func(configFileReader config.ConfigFileReader, op onepassword.OnePasswordClient, gh github.GithubClient, dumpConfig bool) bool {
+		myGithubSecretDistribution = func(configFileReader config.ConfigFileReader, op onepassword.OnePasswordClient, gh github.GithubClient, dumpConfig bool) error {
 			dumpFlagValue = dumpConfig
-			return true
+			return nil
 		}
 
 		main()
@@ -64,9 +64,9 @@ func TestMain(t *testing.T) {
 		os.Args = []string{"cmd"}
 
 		dumpFlagValue := true
-		myGithubSecretDistribution = func(configFileReader config.ConfigFileReader, op onepassword.OnePasswordClient, gh github.GithubClient, dumpConfig bool) bool {
+		myGithubSecretDistribution = func(configFileReader config.ConfigFileReader, op onepassword.OnePasswordClient, gh github.GithubClient, dumpConfig bool) error {
 			dumpFlagValue = dumpConfig
-			return true
+			return nil
 		}
 
 		main()

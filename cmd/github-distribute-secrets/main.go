@@ -32,7 +32,7 @@ func main() {
 	gh := myNewGhClient(*dryRun)
 	op := myNewOpClient()
 
-	if !myGithubSecretDistribution(myNewConfigFileReader(), op, gh, *dumpConfig) {
-		log.Fatalln("Not all configuration was applied successfully!")
+	if err := myGithubSecretDistribution(myNewConfigFileReader(), op, gh, *dumpConfig); err != nil {
+		log.Fatalln(err)
 	}
 }
