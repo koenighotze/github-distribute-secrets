@@ -2,8 +2,9 @@
 
 .PHONY: all build test vet clean
 
-install.tools:
+install.tools.local:
 	go install golang.org/x/vuln/cmd/govulncheck@latest
+	brew install golangci-lint
 
 clean:
 	go clean -x -i
@@ -15,7 +16,7 @@ fmt:
 vet: fmt
 	go vet ./cmd/... ./internal/... ./pkg/...
 
-lint:
+lint.local:
 	golangci-lint run ./...
 
 deps.upgrade:
@@ -25,7 +26,7 @@ deps.upgrade:
 deps.vendor:
 	go mod vendor
 
-deps.vulncheck:
+deps.vulncheck.local:
 	govulncheck ./...
 
 deps.nancy:
