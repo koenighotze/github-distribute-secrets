@@ -54,6 +54,7 @@ jobs:
         with:
           go-version-input: ${{ env.GO_VERSION }}
           go-package: ./...
+          repo-checkout: false
 
   test:
     name: Test
