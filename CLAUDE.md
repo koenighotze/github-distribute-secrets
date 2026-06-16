@@ -22,6 +22,13 @@ make test.report
 
 Integration tests require working `gh` (GitHub CLI) and `op` (1Password CLI) installs. Tag: `//go:build integration`.
 
+## Non-negotiable standards
+
+- No pull request should have more than 300 lines of code changes. If you need more, split into multiple PRs and consider refactoring.
+- Try hard to keep files below 1000 lines. If you need more, consider refactoring.
+- Avoid spaghetti code. If you need more, consider refactoring.
+- Always go for simpler, human-readable code!
+
 ## Architecture
 
 The tool reads `config.yml`, fetches secret values from 1Password, and writes them as GitHub repository secrets via CLI subprocesses — no direct API clients.
