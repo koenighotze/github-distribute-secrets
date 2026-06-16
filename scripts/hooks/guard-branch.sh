@@ -3,7 +3,7 @@
 
 BRANCH=$(git branch --show-current 2>/dev/null)
 
-if [ "$BRANCH" = "main" ] || [ "$BRANCH" = "master" ]; then
+if [ "$BRANCH" = "main" ]; then
   jq -n --arg b "$BRANCH" '{
     "hookSpecificOutput": {
       "hookEventName": "PreToolUse",
