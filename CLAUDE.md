@@ -24,7 +24,7 @@ Integration tests require working `gh` (GitHub CLI) and `op` (1Password CLI) ins
 
 ## Non negotiable standards
 
-- No pull request shoul have more than 300 lines of code changes. If you need more, split into multiple PRs and consider refactoring.
+- No pull request should have more than 300 lines of code changes. If you need more, split into multiple PRs and consider refactoring.
 - Try hard to keep files below 1000 lines. If you need more, consider refactoring.
 - Avoid spaghetti code. If you need more, consider refactoring.
 - Always go for simpler, human-readable code!
