@@ -68,11 +68,13 @@ For each failed check:
 4. Fix the code
 5. `make test` — must pass locally before pushing
 6. Commit and push:
+
    ```bash
    git add -u
    git commit -m "fix: <what was wrong>"
    git push
    ```
+
 7. Go back to 2.1
 
 ---
@@ -97,6 +99,7 @@ gh pr view "$PR_NUM" --json reviews --jq '.reviews[] | {author: .author.login, s
 ### 3.3 Evaluate each finding
 
 For each comment:
+
 - **Warranted**: apply fix, run `make test`
 - **Not warranted**: note the reasoning explicitly — do not apply blindly
 
@@ -115,6 +118,7 @@ Then go back to Phase 2 to confirm CI still passes with the fixes.
 ## Done
 
 Report the PR as ready to merge when:
+
 - All CI checks are green
 - All review findings are addressed or explicitly dismissed with reasoning
 

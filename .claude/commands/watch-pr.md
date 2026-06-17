@@ -35,6 +35,7 @@ gh pr view <number> --json reviews,comments
 ```
 
 For each finding:
+
 - Evaluate whether it is correct and warranted
 - If yes: apply the fix, run `make test`
 - If no: note the reasoning — do not blindly apply every suggestion
