@@ -1,6 +1,8 @@
 .DEFAULT_GOAL := build
 
-.PHONY: all build test vet clean
+.PHONY: all build test vet clean install.tools lint deps.vulncheck
+
+install.tools: install.tools.local
 
 install.tools.local:
 	go install golang.org/x/vuln/cmd/govulncheck@latest
@@ -16,6 +18,8 @@ fmt:
 vet: fmt
 	go vet ./cmd/... ./internal/... ./pkg/...
 
+lint: lint.local
+
 lint.local:
 	golangci-lint run ./...
 
@@ -25,6 +29,8 @@ deps.upgrade:
 
 deps.vendor:
 	go mod vendor
+
+deps.vulncheck: deps.vulncheck.local
 
 deps.vulncheck.local:
 	govulncheck ./...

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# PreToolUse hook: blocks Edit/Write on main or master branch.
+# PreToolUse hook: blocks Edit/Write on the main branch.
 
 BRANCH=$(git branch --show-current 2>/dev/null)
 
@@ -12,3 +12,5 @@ if [ "$BRANCH" = "main" ]; then
     }
   }'
 fi
+
+exit 0
