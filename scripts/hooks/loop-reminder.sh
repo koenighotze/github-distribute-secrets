@@ -9,8 +9,8 @@ AHEAD=$(git log '@{u}..' --oneline 2>/dev/null | wc -l | tr -d ' ')
 
 MSG=""
 
-if [ "$BRANCH" = "main" ]; then
-  MSG="On main branch — create a feature branch before editing files."
+if [ "$BRANCH" = "main" ] || [ "$BRANCH" = "master" ]; then
+  MSG="On ${BRANCH} branch — create a feature branch before editing files."
 elif [ "$DIRTY" -gt 0 ] && [ "$AHEAD" -eq 0 ]; then
   MSG="Uncommitted changes on '$BRANCH'. Next: /superpowers:verification-before-completion → /commit-commands:commit-push-pr"
 elif [ "$AHEAD" -gt 0 ]; then
