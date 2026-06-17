@@ -10,5 +10,5 @@ echo "$FILE" | grep -qE '\.go$' || exit 0
 TOPLEVEL=$(git rev-parse --show-toplevel 2>/dev/null)
 [ -z "$TOPLEVEL" ] && exit 0
 
-cd "$TOPLEVEL"
+cd "$TOPLEVEL" || exit
 make test 2>&1 | tail -20

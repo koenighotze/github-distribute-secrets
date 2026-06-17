@@ -4,8 +4,8 @@
 git rev-parse --git-dir >/dev/null 2>&1 || exit 0
 
 BRANCH=$(git branch --show-current 2>/dev/null)
-DIRTY=$(git status --porcelain 2>/dev/null | grep -v '^??' | wc -l | tr -d ' ')
-AHEAD=$(git log @{u}.. --oneline 2>/dev/null | wc -l | tr -d ' ')
+DIRTY=$(git status --porcelain 2>/dev/null | grep -cv '^??')
+AHEAD=$(git log '@{u}..' --oneline 2>/dev/null | wc -l | tr -d ' ')
 
 MSG=""
 
